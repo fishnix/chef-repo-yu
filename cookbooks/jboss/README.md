@@ -17,11 +17,17 @@ Attributes
 - for simplicity... easy to make these node specific
 
 `    "jboss": { "jboss_apps" }		Directory to drop jboss nodes`
+
 `    "jboss": { "jboss_home" }		JBoss install directory`
+
 `    "jboss": { "java_home" }		Java install directory`
+
 `    "jboss": { "jboss_file" }		Name of the jboss blob we suck down`
+
 `    "jboss": { "jboss_url" }		URL to the jboss blob we suck down`
+
 `    "jboss": { "jdk_file" }			Name of the jdk blob we suck down`
+
 `    "jboss": { "jdk_url" }			URL to the jdk blob we suck down`
 
 - Node specific settings
