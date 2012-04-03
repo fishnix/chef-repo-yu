@@ -15,13 +15,14 @@ Attributes
 - Global/per server settings for jboss
 - assumes single jdk + jboss install per server
 - for simplicity... easy to make these node specific
-    "jboss": { "jboss_apps" }		Directory to drop jboss nodes
-    "jboss": { "jboss_home" }		JBoss install directory
-    "jboss": { "java_home" }		Java install directory
-     "jboss": { "jboss_file" }		Name of the jboss blob we suck down
-     "jboss": { "jboss_url" }		URL to the jboss blob we suck down
-     "jboss": { "jdk_file" }			Name of the jdk blob we suck down
-     "jboss": { "jdk_url" }			URL to the jdk blob we suck down
+
+`    "jboss": { "jboss_apps" }		Directory to drop jboss nodes`
+`    "jboss": { "jboss_home" }		JBoss install directory`
+`    "jboss": { "java_home" }		Java install directory`
+`    "jboss": { "jboss_file" }		Name of the jboss blob we suck down`
+`    "jboss": { "jboss_url" }		URL to the jboss blob we suck down`
+`    "jboss": { "jdk_file" }			Name of the jdk blob we suck down`
+`    "jboss": { "jdk_url" }			URL to the jdk blob we suck down`
 
 - Node specific settings
 - This is a hash of hashes.  Each key is the node name and the values are the config values
@@ -67,6 +68,7 @@ Usage
 Override specific attributes in the node editor:
 
 ex.
+
 `    	knife node edit node_name`
 `    	"normal": {`
 `    		"jboss": {`
