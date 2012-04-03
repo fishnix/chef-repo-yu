@@ -1,0 +1,10 @@
+= DESCRIPTION:
+
+Manage yum repos
+
+= REQUIREMENTS:
+
+= ATTRIBUTES:
+
+= USAGE:
+
