@@ -59,7 +59,7 @@ Attributes
 `    																				}`
 `    													}`
 `    					}`
-``
+
 
 Usage
 =====
@@ -67,16 +67,16 @@ Usage
 Override specific attributes in the node editor:
 
 ex.
-    	knife node edit node_name
-    	"normal": {
-    		"jboss": {
-    			"nodes": {
-    				"node00": {
-    					"node_enabled": "true"
-    				},
-    				"node01": {
-    					"node_enabled": "true"
-    				}
-    			}
-    		}
-    	knife node show node_name -a "jboss"
+`    	knife node edit node_name`
+`    	"normal": {`
+`    		"jboss": {`
+`    			"nodes": {`
+`    				"node00": {`
+`    					"node_enabled": "true"`
+`    				},`
+`    				"node01": {`
+`    					"node_enabled": "true"`
+`    				}`
+`    			}`
+`    		}`
+`    	knife node show node_name -a "jboss"`
