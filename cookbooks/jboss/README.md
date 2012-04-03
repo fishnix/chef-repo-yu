@@ -40,26 +40,26 @@ Attributes
 - 'minheap': Min heap size
 - 'additional_jboss_opts': array of additional jboss options
 - 'additional_java_opts': array of additional java options
-    `"jboss": { "nodes"  => {
-    													'node00' => { 'type'                    => 'all',
-                                             'node_enabled'            => false, 
-                                             'partition'               => 'FAKEPARTITION',
-                                             'user'                    => 'jbossa',
-                                             'clusteraddr'             => '224.1.4.1',
-                                             'loglevel'                => 'INFO',
-                                             'msgid'                   => 10,
-                                             'port_binding'            => 'ports-default',
-                                             'http_port'               => 8080,
-                                             'https_port'              => 8440,
-                                             'maxperm'                 => '128m',
-                                             'maxheap'                 => '1024m',
-                                             'minheap'                 => '1024m',
-                                             'additional_jboss_opts'   => [],
-                                             'additional_java_opts'    => []
-    																				}
-    													}
-    					}`
-
+`    "jboss": { "nodes"  => {`
+`    													'node00' => { 'type'                    => 'all',`
+`                                             'node_enabled'            => false,` 
+`                                             'partition'               => 'FAKEPARTITION',`
+`                                             'user'                    => 'jbossa',`
+`                                             'clusteraddr'             => '224.1.4.1',`
+`                                             'loglevel'                => 'INFO',`
+`                                             'msgid'                   => 10,`
+`                                             'port_binding'            => 'ports-default',`
+`                                             'http_port'               => 8080,`
+`                                             'https_port'              => 8440,`
+`                                             'maxperm'                 => '128m',`
+`                                             'maxheap'                 => '1024m',`
+`                                             'minheap'                 => '1024m',`
+`                                             'additional_jboss_opts'   => [],`
+`                                             'additional_java_opts'    => []`
+`    																				}`
+`    													}`
+`    					}`
+``
 
 Usage
 =====
