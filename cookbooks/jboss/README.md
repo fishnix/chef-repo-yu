@@ -40,7 +40,7 @@ Attributes
 - 'minheap': Min heap size
 - 'additional_jboss_opts': array of additional jboss options
 - 'additional_java_opts': array of additional java options
-    "jboss": { "nodes"  => {
+    `"jboss": { "nodes"  => {
     													'node00' => { 'type'                    => 'all',
                                              'node_enabled'            => false, 
                                              'partition'               => 'FAKEPARTITION',
@@ -58,7 +58,7 @@ Attributes
                                              'additional_java_opts'    => []
     																				}
     													}
-    					}
+    					}`
 
 
 Usage
