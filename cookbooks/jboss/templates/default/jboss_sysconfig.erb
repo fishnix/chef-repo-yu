@@ -1,0 +1,49 @@
+# Enable/Disable node
+<% if @node_conf['node_enabled'] -%>
+ENABLED=1
+<% else -%>
+ENABLED=0
+<% end -%>
+
+# JBoss node name (node00, node01, node02, node03)
+JBOSS_NODE="<%= @node_name %>"
+
+# JBoss partition name
+JBOSS_PARTITION="<%= @node_conf['partition'] %>"
+
+# IP on server to bind to
+JBOSS_BIND="<%= node[:ipaddress] %>"
+
+# User which runs JBoss
+JBOSS_USER="<%= @node_conf['user'] %>"
+
+# Where JBoss nodes live and where JBoss is installed
+JBOSS_APPS="<%= node[:jboss][:jboss_apps] %>"
+JBOSS_HOME="<%= node[:jboss][:jboss_home] %>"
+
+# Where JVM is installed
+JAVA_HOME="<%= node[:jboss][:java_home] %>"
+
+# Multicast addres for JBoss clustering
+CLSTR_ADDR="<%= @node_conf['clusteraddr'] %>"
+
+# Logging Level 
+LOGLVL="<%= @node_conf['loglevel'] %>"
+MSGSVRID=<%= @node_conf['msgid'] %>;
+
+# What binding set to use (ports-default, ports-01, ports-02, ports-03)
+# HTTP: 8080, 8180, 8280, 8380
+# HTTPS: 8440, 8441, 8442, 8443
+BINDING="<%= @node_conf['port_binding'] %>"
+HTTPPORT=<%= @node_conf['http_port'] %>
+HTTPSPORT=<%= @node_conf['https_port'] %>
+
+# Memory settings for JVM
+MAXPERM=<%= @node_conf['maxperm'] %>
+MAXHEAP=<%= @node_conf['maxheap'] %>
+MINHEAP=<%= @node_conf['minheap'] %>
+
+
+# Additional options for JBoss and JAVA
+ADDLJBOPTS="<%= @node_conf['additional_jboss_opts'].join(' ') %>"
+ADDLJVAOPTS="<%= @node_conf['additional_java_opts'].join(' ') %>"

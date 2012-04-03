@@ -1,0 +1,157 @@
+#!/bin/bash
+# $Id: jboss_nodexx,v 1.9 2010/11/18 20:50:09 root Exp $
+#
+# Init script for JBoss Application Server
+#
+# Written by E Camden Fisher <camden.fisher@yale.edu>
+#
+# chkconfig: - 98 02
+# description: JBoss Java Application Server
+#
+
+source /etc/rc.d/init.d/functions
+
+#########################################
+# Sane defaults
+MAXPERM="256M"
+MAXHEAP="1024m"
+MINHEAP="1024m"
+JBOSS_LOGDIR="/var/log/jboss"
+# location of cacerts file
+CACERTS="/usr/local/etc/cacerts"
+#########################################
+
+# location of sysconfig file
+[ -L $0 ] && SYSCONFIG="/etc/sysconfig/$(basename $(readlink $0))" || SYSCONFIG="/etc/sysconfig/$(basename $0)"
+
+### Exit if sysconfig doesn't exist
+if [ ! -r ${SYSCONFIG} ]; then
+  echo "sysconfig: ${SYSCONFIG} not readable"
+  exit 1
+fi
+
+### Read configuration
+[ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
+
+export HOME=/home/${JBOSS_USER}
+export JAVA_HOME=${JAVA_HOME}
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+### system-specific variables for JBoss instances
+export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} \
+		  -Djavax.net.ssl.trustStore=${CACERTS} \
+	     	  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${JBOSS_LOGDIR}/${JBOSS_NODE}_heap.hprof \
+		  -Xloggc:${JBOSS_LOGDIR}/${JBOSS_NODE}_gc.log \
+		  ${ADDLJVAOPTS}" 
+
+# JBoss variables
+export JBOSS_OPTS="-Djboss.server.base.dir=${JBOSS_APPS} -Djboss.server.base.url=file://${JBOSS_APPS}  \
+                   -Djboss.bind.httpport=${HTTPPORT} -Djboss.bind.httpsport=${HTTPSPORT} \
+                   -Djboss.service.binding.set=${BINDING} -Djboss.server.log.threshold=${LOGLVL} \
+                   -Djboss.server.log.dir=${JBOSS_LOGDIR} ${ADDLJBOPTS}"
+
+if [ ${MSGSVRID} ]; then
+  export JBOSS_OPTS="${JBOSS_OPTS} -Djboss.messaging.ServerPeerID=${MSGSVRID}"
+fi
+
+
+start(){
+
+  if [ ! ${ENABLED} -eq 1 ]; then
+    echo "Node is disabled via sysconfig: ${SYSCONFIG}"
+    exit 1
+  fi
+
+  /bin/echo "Starting JBoss node ${JBOSS_NODE}..."
+
+  ### fireup node
+  /usr/bin/sudo -b -E -u ${JBOSS_USER} -- ${JBOSS_HOME}/bin/run.sh ${JBOSS_OPTS} -c ${JBOSS_NODE} -g ${JBOSS_PARTITION} -b ${JBOSS_BIND} -u ${CLSTR_ADDR} >/dev/null 2>&1 &
+  sleep 10
+}
+
+start_debug(){
+
+  if [ ! ${ENABLED} -eq 1 ]; then
+    echo "Node is disabled via sysconfig: ${SYSCONFIG}"
+    exit 1
+  fi
+
+  /bin/echo "Starting JBoss node ${JBOSS_NODE}..."
+  
+  ### fireup node
+  echo "Starting jboss: /usr/bin/sudo -b -E -u ${JBOSS_USER} -- ${JBOSS_HOME}/bin/run.sh ${JBOSS_OPTS} -c ${JBOSS_NODE} -g ${JBOSS_PARTITION} -b ${JBOSS_BIND} -u ${CLSTR_ADDR}"
+  #export JAVA_OPTS="${JAVA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
+  /usr/bin/sudo -b -E -u ${JBOSS_USER} -- ${JBOSS_HOME}/bin/run.sh ${JBOSS_OPTS} -c ${JBOSS_NODE} -g ${JBOSS_PARTITION} -b ${JBOSS_BIND} -u ${CLSTR_ADDR} &
+  sleep 10
+}
+
+stop(){
+  /bin/echo "Stopping JBoss ..."
+  ### attempt a graceful pkill
+  /usr/bin/pkill -f "\-c ${JBOSS_NODE}" -u jbossa 
+  ### wait a bit
+  /bin/sleep 15
+  ### signal 9 any processes left-over
+  /usr/bin/pkill -9 -f "\-c ${JBOSS_NODE}" -u jbossa
+
+  /bin/sleep 5
+
+  ### Clean up jboss tmp and work directories
+  for n in ${JBOSS_APPS}/${JBOSS_NODE}
+  do
+        if [ -d  $n/tmp ]
+        then
+          /bin/echo "  ~ Cleaning ${n}/tmp ~"
+
+          cd ${n}/tmp
+	  if [ "$?" -ne "0" ]; then
+           /bin/echo "Error trying to cd to ${n}/tmp"
+           exit 1
+	  fi
+
+	  /bin/rm --preserve-root -Rf ${n}/tmp/*
+        fi
+
+        if [ -d  ${n}/work ]
+        then
+          /bin/echo "  ~ Cleaning ${n}/work ~"
+
+          cd ${n}/work
+	  if [ "$?" -ne "0" ]; then
+           /bin/echo "Error trying to cd to ${n}/work"
+           exit 1
+	  fi
+
+	  /bin/rm --preserve-root -Rf ${n}/work/*
+        fi
+  done
+
+}
+
+restart(){
+  stop
+  ### wait a bit
+  /bin/sleep 60
+  start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  start_debug)
+        start_debug
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  *)
+        /bin/echo "Usage: jboss {start|start_debug|stop|restart}"
+        exit 1
+esac
+
+exit 0
+
