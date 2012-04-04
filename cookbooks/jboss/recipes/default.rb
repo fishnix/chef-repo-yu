@@ -23,6 +23,7 @@
 # Install jdk + jboss 
 # This is total YUCK, but no yum repo for me
 # and I didn't want to build CENTOS 6.x pkgs anyways
+# aasily swappable with package"jdk" do... stuff
 bash "install_jdk" do
   user "root"
   cwd "/usr/local"
@@ -87,7 +88,7 @@ node[:jboss][:nodes].each do |n,c|
       #notifies :restart, resources(:service => "jboss_#{n}")
   end
 
-  # More script yuck... need moar pkg managers...
+  # Create the nodes if they don't exist and the jboss_home dir does
   bash "create_node_#{n}" do
     user "root"
     cwd "#{node[:jboss][:jboss_apps]}"
