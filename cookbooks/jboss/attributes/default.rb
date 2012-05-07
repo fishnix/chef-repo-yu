@@ -3,13 +3,10 @@
 # for simplicity... easy to make these node specific
 default[:jboss][:jboss_apps]    = '/usr/local/jboss-apps'
 default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
-default[:jboss][:java_home]     = '/usr/local/jdk1.6.0_25'
 
 # Where should I get my jboss + jdk from? yeah, yeah, packages! I know...
 default[:jboss][:jboss_file]    = 'jboss-eap-5.1.2.tar.gz'
 default[:jboss][:jboss_url]     = 'https://s3.amazonaws.com/chef-misc/pkg/jboss-eap-5.1.2.tar.gz'
-default[:jboss][:jdk_file]      = 'jdk1.6.0_25.tar.gz'
-default[:jboss][:jdk_url]       = 'https://s3.amazonaws.com/chef-misc/pkg/jdk1.6.0_25.tar.gz'
 
 # Node specific settings
 # 'type' is the jboss instance type: all, default, minimal, production, standard, web

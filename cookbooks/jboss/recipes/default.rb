@@ -20,23 +20,12 @@
 # It should work, but I don't plan on using it anywhere
 #
 
-# Install jdk + jboss 
+include_recipe 'java'
+
+# Install jboss 
 # This is total YUCK, but no yum repo for me
 # and I didn't want to build CENTOS 6.x pkgs anyways
 # aasily swappable with package"jdk" do... stuff
-bash "install_jdk" do
-  user "root"
-  cwd "/usr/local"
-  not_if do
-    File.exists?("#{node[:jboss][:java_home]}")
-  end
-  code <<-EOH
-  /usr/bin/wget "#{node[:jboss][:jdk_url]}"
-  /bin/tar -zxf "#{node[:jboss][:jdk_file]}"
-  /bin/rm -f "#{node[:jboss][:jdk_file]}"
-  EOH
-end
-
 bash "install_jboss" do
   user "root"
   cwd "/usr/local"
@@ -92,12 +81,8 @@ node[:jboss][:nodes].each do |n,c|
   bash "create_node_#{n}" do
     user "root"
     cwd "#{node[:jboss][:jboss_apps]}"
-    not_if do
-      File.exists?("#{node[:jboss][:jboss_apps]}/#{n}")
-    end
-    only_if do
-       File.exists?("#{node[:jboss][:jboss_home]}")
-    end
+    not_if { File.exists?("#{node[:jboss][:jboss_apps]}/#{n}") }
+    only_if { File.exists?("#{node[:jboss][:jboss_home]}") }
     code <<-EOH
     cp -r #{node[:jboss][:jboss_home]}/server/#{c['type']} #{node[:jboss][:jboss_apps]}/#{n}
     EOH
@@ -108,9 +93,7 @@ node[:jboss][:nodes].each do |n,c|
     directory "#{node[:jboss][:jboss_apps]}/#{n}/#{d}" do
       owner "#{c['user']}"
       group "#{c['user']}"
-      only_if do
-         File.exists?("#{node[:jboss][:jboss_apps]}/#{n}")
-      end
+      only_if { File.exists?("#{node[:jboss][:jboss_apps]}/#{n}") }
       mode 0755
       action :create
     end

@@ -2,9 +2,9 @@ current_dir = File.dirname(__FILE__)
 log_level                :info
 log_location             STDOUT
 node_name                "fishnix-yale"
-client_key               "#{current_dir}/fishnix-yale.pem"
+client_key               "#{ENV['HOME']}/.chef/fishnix-yale.pem"
 validation_client_name   "fishnix-yale-validator"
-validation_key           "#{current_dir}/fishnix-yale-validator.pem"
+validation_key           "#{ENV['HOME']}/.chef/fishnix-yale-validator.pem"
 chef_server_url          "https://api.opscode.com/organizations/fishnix-yale"
 cache_type               'BasicFile'
 cache_options( :path => "#{ENV['HOME']}/.chef/checksums" )
