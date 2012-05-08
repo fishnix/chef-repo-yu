@@ -32,39 +32,131 @@ fi
 ### Read configuration
 [ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
 
-export HOME=/home/${KARAF_USER}
-export JAVA_HOME=${JAVA_HOME}
-export PATH=${PATH}:${JAVA_HOME}/bin
-
-### system-specific variables for JBoss instances
-export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} \
-		  #-Djavax.net.ssl.trustStore=${CACERTS} \
-		  ${ADDLJVAOPTS}" 
-
+# Set some karaf  variables
 export KARAF_HOME=${KARAF_HOME}
 export KARAF_BASE=${KARAF_BASE}
 export KARAF_DATA=${KARAF_DATA}
+export KARAF_PARENT_HOME=${KARAF_HOME}
+export KARAF_PARENT_BASE=${KARAF_BASE}
+export KARAF_PARENT_DATA=${KARAF_DATA}
+export KARAF_INSTANCEDIR=${KARAF_INSTANCEDIR}
+
+# Set some Java variables
+export JAVA_HOME=${JAVA_HOME}
+export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} ${ADDLJVAOPTS}" 
+
+# Set some normal env variables
+export HOME=/home/${KARAF_USER}
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+childname=$2
+
+listInstances(){
+  KARAF_HOME=${KARAF_PARENT_HOME}
+  /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/admin list
+}
 
 start(){
   /bin/echo "Starting Apache ServiceMix..."
 
-  ### fireup parent
-  /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
-  sleep 10
+  if [ ${PARENT_ENABLED} -eq 1 ]; then
+    /bin/echo "Starting Parent..."
+    ### fireup parent
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
+    sleep 10
+  fi
+  
+  for c in "${KARAF_INSTANCES[@]}"
+  do
+    KARAF_HOME="${KARAF_INSTANCEDIR}/${c}"
+    KARAF_BASE="${KARAF_INSTANCEDIR}/${c}"
+    KARAF_DATA="${KARAF_INSTANCEDIR}/${c}/data"
+    
+    echo -e "\tStarting instance $c"
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
+    sleep 10
+  done
+  
+  listInstances
+  
 }
 
 stop(){
   /bin/echo "Stopping Apache ServiceMix ..."
-  ### attempt a graceful kill
-   /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
-  ### wait a bit
-  /bin/sleep 15
+
+  if [ ${PARENT_ENABLED} -eq 1 ]; then
+    /bin/echo "Starting Parent..."
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/stop > /dev/null 2>&1
+    ### wait a bit
+    /bin/sleep 10
+  fi
+  
+  for c in "${KARAF_INSTANCES[@]}"
+  do
+    KARAF_HOME="${KARAF_INSTANCEDIR}/${c}"
+    KARAF_BASE="${KARAF_INSTANCEDIR}/${c}"
+    KARAF_DATA="${KARAF_INSTANCEDIR}/${c}/data"
+    
+    echo -e "\tStopping instance $c"
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/stop > /dev/null 2>&1
+    sleep 10
+  done
+  
+  listInstances
+}
+
+startInstance(){
+  if [ "${childname}" != "" ]; then
+    KARAF_HOME="${KARAF_INSTANCEDIR}/${childname}"
+    KARAF_BASE="${KARAF_INSTANCEDIR}/${childname}"
+    KARAF_DATA="${KARAF_INSTANCEDIR}/${childname}/data"
+    
+    if [ ! -d ${KARAF_INSTANCEDIR}/${childname} ]; then
+      echo "Instance ${childname} doesn't exist in ${KARAF_INSTANCEDIR}."
+      exit 1
+    fi
+    
+    echo "Starting instance ${childname}..."
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
+    sleep 10
+  else
+    echo "Please supply an instance name..."
+    exit 1
+  fi
+  
+  listInstances
+}
+
+stopInstance(){
+  if [ "${childname}" != "" ]; then
+    KARAF_HOME="${KARAF_INSTANCEDIR}/${childname}"
+    KARAF_BASE="${KARAF_INSTANCEDIR}/${childname}"
+    KARAF_DATA="${KARAF_INSTANCEDIR}/${childname}/data"
+    
+    if [ ! -d ${KARAF_INSTANCEDIR}/${childname} ]; then
+      echo "Instance ${childname} doesn't exist in ${KARAF_INSTANCEDIR}."
+      exit 1
+    fi
+    
+    echo "Stoppimg instance ${childname}..."
+    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/stop > /dev/null 2>&1
+    sleep 10
+  else
+    echo "Please supply an instance name..."
+    exit 1
+  fi
+  
+  listInstances
+}
+
+status(){
+  listInstances
 }
 
 restart(){
   stop
   ### wait a bit
-  /bin/sleep 60
+  /bin/sleep 30
   start
 }
 
@@ -72,14 +164,23 @@ case "$1" in
   start)
         start
         ;;
+  startinstance)
+        startInstance
+        ;;
   stop)
         stop
+        ;;
+  stopinstance)
+        stopInstance
+        ;;
+  status)
+        status
         ;;
   restart)
         restart
         ;;
   *)
-        /bin/echo "Usage: $0 {start|stop|restart}"
+        /bin/echo "Usage: $0 {start|stop|restart|stopinstance <name>|startinstance <name>|status}"
         exit 1
 esac
 

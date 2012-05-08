@@ -32,7 +32,7 @@ end
 
 link "#{node[:apache_servicemix][:servicemix_home]}" do
   to "#{node[:apache_servicemix][:servicemix_install]}"
-  only_if { File.exists?("#{node[:apache_servicemix][:servicemix_home]}") }
+  only_if { File.exists?("#{node[:apache_servicemix][:servicemix_install]}") }
 end
 
 

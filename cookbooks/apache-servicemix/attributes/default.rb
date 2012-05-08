@@ -10,6 +10,8 @@ default[:apache_servicemix][:minheap] = "128m"
 
 default[:apache_servicemix][:java_opts] = []
 
+default[:apache_servicemix][:parent_enabled] = '0'
+
 default[:apache_servicemix][:instances] = { 'child00' => { },
                                             'child01' => { }
                                           }
