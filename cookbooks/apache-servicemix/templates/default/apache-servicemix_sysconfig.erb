@@ -2,21 +2,21 @@
 KARAF_USER="jbossa"
 
 # Where Apache ServiceMix lives
-KARAF_HOME="/usr/local/apache-servicemix"
-KARAF_BASE="/usr/local/apache-servicemix"
-KARAF_DATA="/usr/local/apache-servicemix/data"
+KARAF_HOME="<%= node[:apache_servicemix][:servicemix_home] %>"
+KARAF_BASE="<%= node[:apache_servicemix][:servicemix_home] %>"
+KARAF_DATA="<%= node[:apache_servicemix][:servicemix_home] %>/data"
 
 # Where JVM is installed
-JAVA_HOME="/usr/local/jdk1.6.0_21"
+JAVA_HOME="<%= node[:java][:java_home] %>"
 
 # Memory settings for JVM
-MAXPERM="256M"
-MAXHEAP="2048m"
-MINHEAP="2048m"
+MAXPERM="<%= node[:apache_servicemix][:maxperm] %>"
+MAXHEAP="<%= node[:apache_servicemix][:maxheap] %>"
+MINHEAP="<%= node[:apache_servicemix][:minheap] %>"
 
 # Additional options for JAVA
-ADDLJVAOPTS=""
+ADDLJVAOPTS="<%= @java_opts.join(' ') %>"
 
 # Start instances
 # This will start the following (but won't create them!)
-KARAF_INSTANCES=( )
+KARAF_INSTANCES=( <%= @instances.join(' ') %> )
