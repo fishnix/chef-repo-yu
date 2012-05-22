@@ -8,6 +8,7 @@
 #
 
 include_recipe 'java'
+include_recipe 'git::client'
 
 # add user if doesn't exist already
 user "#{node[:stash][:user]}" do
@@ -19,12 +20,12 @@ end
 # and I didn't want to build CENTOS 6.x pkgs anyways
 # aasily swappable with package do... stuff
 bash "install_stash" do
-  user "#{node[:stash][:user]}"
+  user "root"
   cwd "#{node[:stash][:basedir]}"
   not_if { File.exists?("#{node[:stash][:stash_install]}") }
   code <<-EOH
   /usr/bin/wget "#{node[:stash][:stash_url]}"
-  /bin/tar -zxf "#{node[:stash][:stash__file]}"
+  /bin/tar -zxf "#{node[:stash][:stash_file]}"
   /bin/rm -f "#{node[:stash][:stash_file]}"
   chown -Rh #{node[:stash][:user]}:#{node[:stash][:user]} #{node[:stash][:stash_install]}
   EOH
