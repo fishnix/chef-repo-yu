@@ -1,0 +1,8 @@
+
+LoadPlugin rrdtool
+
+<Plugin rrdtool>
+	DataDir "<%= node[:collectd][:rrdtool][:data_dir] %>"
+	CacheTimeout <%= node[:collectd][:rrdtool][:cache_timeout] %>
+	CacheFlush   <%= node[:collectd][:rrdtool][:cache_flush] %>
+</Plugin>
