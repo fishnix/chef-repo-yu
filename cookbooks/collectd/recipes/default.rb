@@ -38,3 +38,7 @@ template "/etc/collectd.conf" do
     mode    "0444"
     notifies :restart, resources(:service => "collectd"), :delayed
 end
+
+node[:collectd][:plugins].each do |p|
+  include_recipe "collectd::collectd-#{p}"
+end

@@ -52,6 +52,8 @@ LoadPlugin syslog
 # to missing dependencies or because they have been deactivated explicitly.  #
 ##############################################################################
 
+Include "<%= node[:collectd][:include_dir] %>"
+
 #LoadPlugin apache
 #LoadPlugin apcups
 ##LoadPlugin apple_sensors
@@ -106,9 +108,6 @@ LoadPlugin memory
 ##LoadPlugin onewire
 #LoadPlugin openvpn
 ##LoadPlugin oracle
-<LoadPlugin perl>
-  Globals true
-</LoadPlugin>
 ##LoadPlugin pinba
 #LoadPlugin ping
 #LoadPlugin postgresql
@@ -762,8 +761,6 @@ LoadPlugin memory
 #	CreateFiles true
 #	CollectStatistics true
 #</Plugin>
-
-Include "/etc/collectd.d"
 
 #<Plugin rrdtool>
 #	DataDir "/usr/var/lib/collectd/rrd"
