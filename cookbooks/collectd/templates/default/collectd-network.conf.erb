@@ -5,13 +5,14 @@ LoadPlugin network
   <% if node[:collectd][:network][:is_client] -%>
   # client setup:
   #Server "ff18::efc0:4a42" "25826"
-  <Server "<%= node[:collectd][:network][:server_ip] %>" "<%= node[:collectd][:network][:server_port] %>">
-  		SecurityLevel Encrypt
-  		Username "user"
-  		Password "secret"
-  		Interface "eth0"
-  </Server>
-  TimeToLive "128"
+  Server "<%= node[:collectd][:network][:server_ip] %>" "<%= node[:collectd][:network][:server_port] %>"
+  #<Server "<%= node[:collectd][:network][:server_ip] %>" "<%= node[:collectd][:network][:server_port] %>">
+  #		SecurityLevel Encrypt
+  #		Username "user"
+  #		Password "secret"
+  #		Interface "eth0"
+  #</Server>
+  TimeToLive <%= node[:collectd][:network][:ttl] %>
   <% end -%>
   
   <% if node[:collectd][:network][:is_server] %>

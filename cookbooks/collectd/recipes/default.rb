@@ -27,7 +27,14 @@ package "collectd" do
 end
 
 service "collectd" do
-  supports :status => true, :restart => true
+  supports :status => true, :restart => true, :stop => true, :start => true
+end
+
+directory "#{node[:collectd][:data_dir]}" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
 end
 
 # system.properties
