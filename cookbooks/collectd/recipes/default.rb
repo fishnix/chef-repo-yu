@@ -26,7 +26,15 @@ package "collectd" do
   action [ :install, :upgrade ]
 end
 
-#service "collectd" do
-#  supports :status => true, :restart => true
-#  action [ :enable, :start ]
-#end
+service "collectd" do
+  supports :status => true, :restart => true
+end
+
+# system.properties
+template "/etc/collectd.conf" do
+    source  "collectd.conf.erb"
+    owner   "root"
+    group   "root"
+    mode    "0444"
+    notifies :restart, resources(:service => "collectd"), :delayed
+end
