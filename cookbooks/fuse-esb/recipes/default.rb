@@ -15,10 +15,10 @@ user "#{node[:fuse_esb][:user]}" do
   comment "App User"
 end
 
-# Install jdk
+# Install fuse_esb
 # This is total YUCK, but no yum repo for me
 # and I didn't want to build CENTOS 6.x pkgs anyways
-# aasily swappable with package"jdk" do... stuff
+# aasily swappable with package"fuse-esb" do... stuff
 bash "install_fuse_esb" do
   user "root"
   cwd "/usr/local"
