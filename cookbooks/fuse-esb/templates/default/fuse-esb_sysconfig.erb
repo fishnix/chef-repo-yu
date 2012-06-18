@@ -1,0 +1,26 @@
+# User which runs Apache ServiceMix
+KARAF_USER="appa"
+
+# Where Apache ServiceMix lives
+KARAF_HOME="<%= node[:fuse_esb][:fuse_esb_home] %>"
+KARAF_BASE="<%= node[:fuse_esb][:fuse_esb_home] %>"
+KARAF_DATA="<%= node[:fuse_esb][:fuse_esb_home] %>/data"
+KARAF_INSTANCEDIR="<%= node[:fuse_esb][:fuse_esb_home] %>/instances"
+
+# Where JVM is installed
+JAVA_HOME="<%= node[:java][:java_home] %>"
+
+# Memory settings for JVM
+MAXPERM="<%= node[:fuse_esb][:maxperm] %>"
+MAXHEAP="<%= node[:fuse_esb][:maxheap] %>"
+MINHEAP="<%= node[:fuse_esb][:minheap] %>"
+
+# Additional options for JAVA
+ADDLJVAOPTS="<%= @java_opts.join(' ') %>"
+
+# Enable the parent
+PARENT_ENABLED=<%= node[:fuse_esb][:parent_enabled] %>
+
+# Start instances
+# This will start the following (but won't create them!)
+KARAF_INSTANCES=( <%= @instances.join(' ') %> )
