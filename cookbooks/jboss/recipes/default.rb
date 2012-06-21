@@ -53,6 +53,7 @@ node[:jboss][:nodes].each do |n,c|
   # add user if doesn't exist already
   user "#{c['user']}" do
     comment "JBoss User"
+    action :create
   end
 
   # jboss sysconfig
