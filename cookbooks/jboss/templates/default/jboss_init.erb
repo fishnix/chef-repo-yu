@@ -88,11 +88,11 @@ start_debug(){
 stop(){
   /bin/echo "Stopping JBoss ..."
   ### attempt a graceful pkill
-  /usr/bin/pkill -f "\-c ${JBOSS_NODE}" -u jbossa 
+  /usr/bin/pkill -f "\-c ${JBOSS_NODE}" -u ${JBOSS_USER} 
   ### wait a bit
   /bin/sleep 15
   ### signal 9 any processes left-over
-  /usr/bin/pkill -9 -f "\-c ${JBOSS_NODE}" -u jbossa
+  /usr/bin/pkill -9 -f "\-c ${JBOSS_NODE}" -u ${JBOSS_USER}
 
   /bin/sleep 5
 
