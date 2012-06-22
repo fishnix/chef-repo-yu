@@ -37,3 +37,19 @@ remote_file "#{node[:jenkins][:jenkins_base]}/jenkins.war" do
   mode "0644"
   action :create_if_missing
 end
+
+# jenkins sysconfig
+template "/etc/sysconfig/jenkins" do
+    source "jenkins_sysconfig.erb"
+    owner "root"
+    group "root"
+    mode 0444
+end
+
+# jenkins init script
+template "/etc/init.d/jenkins" do
+    source "jenkins_init.erb"
+    owner "root"
+    group "root"
+    mode 0555
+end
