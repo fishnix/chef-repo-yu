@@ -65,7 +65,7 @@ node[:jboss][:nodes].each do |n,c|
   end
 
   # Setup jboss-apps dir
-  directory "#{node[:jboss][:jboss_logdir]}/n" do
+  directory "#{node[:jboss][:jboss_logdir]}/#{n}" do
     owner "#{c['user']}"
     group "#{c['user']}"
     mode 0755
