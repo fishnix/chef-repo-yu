@@ -47,6 +47,14 @@ directory "#{node[:jboss][:jboss_apps]}" do
   action :create
 end
 
+# Setup jboss-apps dir
+directory "#{node[:jboss][:jboss_logdir]}" do
+  owner "jbossa"
+  group "jbossa"
+  mode 0755
+  action :create
+end
+
 # setup each node in the list
 node[:jboss][:nodes].each do |n,c|
  

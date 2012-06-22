@@ -3,6 +3,7 @@
 # for simplicity... easy to make these node specific
 default[:jboss][:jboss_apps]    = '/usr/local/jboss-apps'
 default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
+default[:jboss][:jboss_logdir]  = "/var/log/jboss"
 
 # Where should I get my jboss + jdk from? yeah, yeah, packages! I know...
 default[:jboss][:jboss_file]    = 'jboss-eap-5.1.2.tar.gz'
