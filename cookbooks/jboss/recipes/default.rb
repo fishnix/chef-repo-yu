@@ -49,8 +49,8 @@ end
 
 # Setup jboss-apps dir
 directory "#{node[:jboss][:jboss_logdir]}" do
-  owner "jbossa"
-  group "jbossa"
+  owner "root"
+  group "root"
   mode 0755
   action :create
 end
@@ -61,6 +61,14 @@ node[:jboss][:nodes].each do |n,c|
   # add user if doesn't exist already
   user "#{c['user']}" do
     comment "JBoss User"
+    action :create
+  end
+
+  # Setup jboss-apps dir
+  directory "#{node[:jboss][:jboss_logdir]}/n" do
+    owner "#{c['user']}"
+    group "#{c['user']}"
+    mode 0755
     action :create
   end
 
