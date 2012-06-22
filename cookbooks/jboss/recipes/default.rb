@@ -117,10 +117,10 @@ node[:jboss][:nodes].each do |n,c|
   end
   
   template "#{node[:jboss][:jboss_apps]}/#{n}/conf/props/jmx-console-users.properties" do
-      source "jms-console-users.properties.erb"
-      owner "root"
-      group "root"
-      mode 0444
+    source "jmx-console-users.properties.erb"
+    owner "root"
+    group "root"
+    mode 0444
   end
     
   service "jboss_#{n}" do
