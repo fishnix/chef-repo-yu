@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# Init script for Fuse MQ (Apache ActiveMQ)
+#
+# Written by E Camden Fisher <camden.fisher@yale.edu>
+#
+# chkconfig: - 98 02
+# description: Fuse MQ (Apache ActiveMQ)
+#
+
+source /etc/rc.d/init.d/functions
+
+#########################################
+# Sane defaults
+MAXPERM="256M"
+MAXHEAP="1024m"
+MINHEAP="1024m"
+# location of cacerts file
+#CACERTS="/usr/local/etc/cacerts"
+#########################################
+
+# location of sysconfig file
+[ -L $0 ] && SYSCONFIG="/etc/sysconfig/$(basename $(readlink $0))" || SYSCONFIG="/etc/sysconfig/$(basename $0)"
+
+### Exit if sysconfig doesn't exist
+if [ ! -r ${SYSCONFIG} ]; then
+  echo "sysconfig: ${SYSCONFIG} not readable"
+  exit 1
+fi
+
+### Read configuration
+[ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
+
+# Set some karaf  variables
+export ACTIVEMQ_HOME=${ACTIVEMQ_HOME}
+export ACTIVEMQ_BASE=${ACTIVEMQ_HOME}
+export ACTIVEMQ_CONF=${ACTIVEMQ_HOME}/conf
+export ACTIVEMQ_DATA=${ACTIVEMQ_HOME}/data
+
+# Set some Java variables
+export JAVA_HOME=${JAVA_HOME}
+export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} ${ADDLJVAOPTS}" 
+
+# Set some normal env variables
+export HOME=/home/${ACTIVEMQ_USER}
+export PATH=${JAVA_HOME}/bin:${PATH}
+
+start(){
+  /bin/echo "Starting Fuse MQ (Apache ActiveMQ) ..."
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq start > /dev/null 2>&1
+  sleep 10
+}
+
+stop(){
+  /bin/echo "Stopping Fuse MQ (Apache ActiveMQ) ..."
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq stop > /dev/null 2>&1
+  ### wait a bit
+  /bin/sleep 10
+}
+
+status(){
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq status > /dev/null 2>&1
+}
+
+restart(){
+  stop
+  ### wait a bit
+  /bin/sleep 30
+  start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart)
+        restart
+        ;;
+  *)
+        /bin/echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+
+exit 0
+
