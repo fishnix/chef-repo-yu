@@ -30,7 +30,7 @@ directory "#{node[:jenkins][:jenkins_home]}" do
 end
 
 # Install jenkins war file
-remote_file "#{node[:jenkins][:jenkins_home]}/jenkins.war" do
+remote_file "#{node[:jenkins][:jenkins_base]}/jenkins.war" do
   source "#{node[:jenkins][:jenkins_url]}"
   owner "#{node[:jenkins][:jenkins_user]}"
   group "#{node[:jenkins][:jenkins_user]}"
