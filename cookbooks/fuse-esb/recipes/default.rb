@@ -13,6 +13,7 @@ include_recipe 'java'
 # add user if doesn't exist already
 user "#{node[:fuse_esb][:user]}" do
   comment "App User"
+  action :create
 end
 
 # Install fuse_esb
