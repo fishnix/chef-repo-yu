@@ -116,7 +116,7 @@ node[:jboss][:nodes].each do |n,c|
     end
   end
   
-  template "#{node[:jboss][:jboss_apps]}/#{n}/conf/props/jms-console-users.properties" do
+  template "#{node[:jboss][:jboss_apps]}/#{n}/conf/props/jmx-console-users.properties" do
       source "jms-console-users.properties.erb"
       owner "root"
       group "root"
