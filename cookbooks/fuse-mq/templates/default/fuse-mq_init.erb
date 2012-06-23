@@ -47,19 +47,19 @@ export PATH=${JAVA_HOME}/bin:${PATH}
 
 start(){
   /bin/echo "Starting Fuse MQ (Apache ActiveMQ) ..."
-  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq start > /dev/null 2>&1
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/start > /dev/null 2>&1
   sleep 10
 }
 
 stop(){
   /bin/echo "Stopping Fuse MQ (Apache ActiveMQ) ..."
-  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq stop > /dev/null 2>&1
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/stop > /dev/null 2>&1
   ### wait a bit
   /bin/sleep 10
 }
 
 status(){
-  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/activemq status > /dev/null 2>&1
+  /usr/bin/sudo -b -E -u ${ACTIVEMQ_USER} -- ${ACTIVEMQ_HOME}/bin/admin list > /dev/null 2>&1
 }
 
 restart(){
