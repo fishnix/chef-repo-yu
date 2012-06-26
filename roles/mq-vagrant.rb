@@ -9,7 +9,7 @@ default_attributes(
               "jdk_file"  => 'jdk1.6.0_33.tar.gz',
               "java_home" => '/usr/local/jdk1.6.0_33'
             },
-  "fuse-mq" => {  "url"   => 'http://leleupi.its.yale.edu:8181/PKG/fuse-mq-7.0.0.fuse-061.tar.gz',
+  "fuse_mq" => {  "url"   => 'http://leleupi.its.yale.edu:8181/PKG/fuse-mq-7.0.0.fuse-061.tar.gz',
                   "file"  => 'fuse-mq-7.0.0.fuse-061.tar.gz',
                   "home"  => '/usr/local/fuse-mq'
               }

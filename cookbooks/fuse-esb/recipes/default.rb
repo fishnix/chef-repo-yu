@@ -23,27 +23,27 @@ end
 bash "install_fuse_esb" do
   user "root"
   cwd "/usr/local"
-  not_if { File.exists?("#{node[:fuse_esb][:fuse_esb_install]}") }
+  not_if { File.exists?("#{node[:fuse_esb][:install]}") }
   code <<-EOH
-  /usr/bin/wget "#{node[:fuse_esb][:fuse_esb_url]}"
-  /bin/tar -zxf "#{node[:fuse_esb][:fuse_esb_file]}"
-  /bin/rm -f "#{node[:fuse_esb][:fuse_esb_file]}"
-  chown -Rh root:root #{node[:fuse_esb][:fuse_esb_install]}
+  /usr/bin/wget "#{node[:fuse_esb][:url]}"
+  /bin/tar -zxf "#{node[:fuse_esb][:file]}"
+  /bin/rm -f "#{node[:fuse_esb][:file]}"
+  chown -Rh root:root #{node[:fuse_esb][:install]}
   EOH
 end
 
-link "#{node[:fuse_esb][:fuse_esb_home]}" do
-  to "#{node[:fuse_esb][:fuse_esb_install]}"
-  only_if { File.exists?("#{node[:fuse_esb][:fuse_esb_install]}") }
+link "#{node[:fuse_esb][:home]}" do
+  to "#{node[:fuse_esb][:install]}"
+  only_if { File.exists?("#{node[:fuse_esb][:install]}") }
 end
 
 
 # create fuse_esb subdirs
 %w{ data deploy etc instances lock }.each do |d|
-  directory "#{node[:fuse_esb][:fuse_esb_install]}/#{d}" do
+  directory "#{node[:fuse_esb][:install]}/#{d}" do
     owner "#{node[:fuse_esb][:user]}"
     group "#{node[:fuse_esb][:user]}"
-    only_if { File.exists?("#{node[:fuse_esb][:fuse_esb_install]}") }
+    only_if { File.exists?("#{node[:fuse_esb][:install]}") }
     mode "0755"
     action :create
   end
