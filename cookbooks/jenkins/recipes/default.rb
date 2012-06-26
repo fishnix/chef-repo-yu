@@ -53,3 +53,17 @@ template "/etc/init.d/jenkins" do
     group "root"
     mode 0555
 end
+
+# drop custom plugins in place from remote sources
+node[:jenkins][:custom_plugins].each do |p,l|
+  remote_file "#{node[:jenkins][:jenkins_home]}/plugins/#{p}.hpi" do
+    source "#{l}"
+    owner "#{node[:jenkins][:jenkins_user]}"
+    group "#{node[:jenkins][:jenkins_user]}"
+    mode "0644"
+    action :create_if_missing
+  end
+end
+
+# configure jenkins - want to use jenkins gems to do this
+# TBD

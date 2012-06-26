@@ -27,13 +27,14 @@ export JAVA_HOME=${JAVA_HOME}
 export JENKINS_HOME=${JENKINS_HOME}
 export JENKINS_BASE=${JENKINS_BASE}
 export JENKINS_HTTPPORT=${JENKINS_HTTPPORT}
+export JENKINS_AJPPPORT=${JENKINS_AJPPORT}
 export PATH=${PATH}:${JAVA_HOME}/bin
 
 start(){
   /bin/echo "Starting Jenkins..."
 
   ### fireup node
-  /usr/bin/sudo -b -E -u ${JENKINS_USER} -- ${JAVA_HOME}/bin/java -jar ${JENKINS_BASE}/jenkins.war --httpPort=${JENKINS_HTTPPORT} >/dev/null 2>&1 &
+  /usr/bin/sudo -b -E -u ${JENKINS_USER} -- ${JAVA_HOME}/bin/java -jar ${JENKINS_BASE}/jenkins.war --httpPort=${JENKINS_HTTPPORT} --ajp13Port=${JENKINS_AJPPORT} >${JENKINS_HOME}/jenkins.log 2>&1 &
   sleep 10
 }
 
@@ -41,11 +42,11 @@ start(){
 stop(){
   /bin/echo "Stopping Jenkins ..."
   ### attempt a graceful pkill
-  /usr/bin/pkill -f "\-c jenkins.war" -u ${JENKINS_USER} 
+  /usr/bin/pkill -f "jenkins.war" -u ${JENKINS_USER} 
   ### wait a bit
   /bin/sleep 15
   ### signal 9 any processes left-over
-  /usr/bin/pkill -9 -f "\-c jenkins.war" -u ${JENKINS_USER}
+  /usr/bin/pkill -9 -f "jenkins.war" -u ${JENKINS_USER}
 
   /bin/sleep 5
 

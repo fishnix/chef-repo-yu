@@ -16,5 +16,7 @@ default_attributes(
                 "jboss_apps"  => '/usr/local/jboss-apps',
                 "nodes"       => { "node00" => { "node_enabled"  => true } }
               },
-  "jenkins" => { "jenkins_url"  => 'http://leleupi.its.yale.edu:8181/PKG/jenkins.war' }
+  "jenkins" => {  "jenkins_url"     => 'http://leleupi.its.yale.edu:8181/PKG/jenkins.war',
+                  "custom_plugins"  => { 'yale-mvn-app-installer' => 'http://leleupi.its.yale.edu:8181/PKG/yale-mvn-app-installer.hpi' }
+                }
 )
