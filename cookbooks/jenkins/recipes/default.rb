@@ -29,6 +29,13 @@ directory "#{node[:jenkins][:jenkins_home]}" do
   mode "0755"
 end
 
+directory "#{node[:jenkins][:jenkins_home]}/plugins" do
+  action :create
+  owner  "#{node[:jenkins][:jenkins_user]}"
+  group "#{node[:jenkins][:jenkins_user]}"
+  mode "0755"
+end
+
 # Install jenkins war file
 remote_file "#{node[:jenkins][:jenkins_base]}/jenkins.war" do
   source "#{node[:jenkins][:jenkins_url]}"

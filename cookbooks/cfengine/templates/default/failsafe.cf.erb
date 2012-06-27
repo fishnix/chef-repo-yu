@@ -1,0 +1,175 @@
+################################################################################
+#
+# Failsafe.cf is intended to restore order to agents with syntax errors in
+# their policy files, so clients can always pull policy updates from the
+# master.  As such, it is a very important file and should not be edited
+# unless there is a compelling technical reason to do so and the edit has
+# been thoroughly tested.
+
+# Failsafe has only one dependency: group.cf, which defines the name of
+# the ITS group using this policy, so the group-specific policy directory
+# can be fetched; and the hostname of that group's mothership, so failsafe
+# knows where to pull them from.
+
+# In the typical run of cf-agent, in which no '-f' flag is passed, cf-promises
+# is first called against promises.cf and its imported policy files.
+# If cf-promises fails (a syntax error is found), cf-agent is run against
+# failsafe.cf rather than promises.cf and its posse.
+#
+#
+# IMPORTANT:
+#
+# If you modify this file, copy your changes into the set of policy you use to
+# bootstrap clients.  For dcsunix, this is:
+#
+# /var/cfengine/masterfiles/linux/usr/local/src/cfengine3bootstrap/
+#
+#################################################################################
+
+
+body common control {
+
+  inputs => { "group.cf" };
+  bundlesequence => { "group", "failsafe", "group_failsafe" };
+  domain => "its.yale.edu";
+
+}
+
+bundle agent failsafe {
+
+vars:
+
+  "masterfiles"             string => "$(sys.workdir)/masterfiles";
+  "policy_exclusions_paths"  slist => { "/.*/.svn", "/.*/.snapshot" };
+  "policy_exclusions_leaves" slist => { ".*,v", ".*.swp", "tempfile.*tmp" };
+  "filetype_all"             
+    slist => { "plain", "reg", "symlink", "dir", "socket", "fifo", "door", 
+      "char", "block" },
+    comment => "Defined in 'var' bundle of promises.cf too - if changes are
+      made to this var, merge into other definition.";
+              
+
+classes:
+
+  "have_ppkeys" 
+    # If the key doesn't yet exist client-side, create it, so the agent
+    # can speak to cf-serverd
+    expression => fileexists("$(sys.workdir)/ppkeys/localhost.pub");
+
+files: 
+
+  # "safe" here is to indicate that it's a static copy of the copy body - 
+  # this file should be as free of dependencies as possible, insulating it 
+  # from any errors introduced in other files.
+
+  ##############################################################################
+  # Core cfengine policy files
+  ##############################################################################
+
+  "$(sys.workdir)/inputs/"
+    copy_from    => copy_std_safe("$(masterfiles)/inputs/core",
+      "@(group.mothership)", "false", "true"),
+    perms        => mode_owner_group_safe("0444", "root", "root"),
+    depth_search => searchsettings_exclude_safe("1", 
+      "@(policy_exclusions_paths)", "true"),
+    file_select  => files_matching_not_leaf_safe("@(policy_exclusions_leaves)",
+     "@(filetype_all)"),
+    action       => actionsettings_fix_silent_safe;
+
+  ##############################################################################
+  # Shared policy files
+  ##############################################################################
+
+  "$(sys.workdir)/inputs/common/"
+    copy_from    => copy_std_safe("$(masterfiles)/inputs/common", 
+      "@(group.mothership)", "false", "true"),
+    perms        => mode_owner_group_safe("0444", "root", "root"),
+    depth_search => searchsettings_exclude_safe("inf", 
+      "@(policy_exclusions_paths)", "true"),
+    file_select  => files_matching_not_leaf_safe("@(policy_exclusions_leaves)",
+      "@(filetype_all)"),
+    action       => actionsettings_fix_silent_safe;
+
+  ##############################################################################
+  # Group-specific policy files
+  ##############################################################################
+
+  "$(sys.workdir)/inputs/group.cf"
+    copy_from    =>
+      copy_std_safe("$(masterfiles)/inputs/$(group.groupname)/group.cf",
+      "@(group.mothership)", "false", "true"),
+    perms        => mode_owner_group_safe("0444", "root", "root"),
+    action       => actionsettings_fix_silent_safe;
+
+  "$(sys.workdir)/inputs/$(group.groupname)/"
+    copy_from    => copy_std_safe("$(masterfiles)/inputs/$(group.groupname)", 
+      "@(group.mothership)", "false", "true"),
+    perms        => mode_owner_group_safe("0444", "root", "root"),
+    depth_search => searchsettings_exclude_safe("inf", 
+      "@(policy_exclusions_paths)", "true"),
+    file_select  => files_matching_not_leaf_safe("@(policy_exclusions_leaves)",
+      "@(filetype_all)"),
+    action       => actionsettings_fix_silent_safe;
+
+  "$(sys.workdir)/inputs/promises.cf"
+    copy_from    => 
+      copy_std_safe("$(masterfiles)/inputs/$(group.groupname)/promises.cf",
+      "@(group.mothership)", "false", "true"),
+    perms        => mode_owner_group_safe("0444", "root", "root"),
+    action       => actionsettings_fix_silent_safe;
+
+commands:
+
+  !have_ppkeys::
+  
+    "$(sys.workdir)/bin/cf-key";
+
+}
+
+body copy_from copy_std_safe( source, servers, purge, copy_backup ) {
+
+  source      => "$(source)";
+  servers     => { "@(servers)" };
+  compare     => "digest";
+  purge       => "$(purge)";
+  encrypt     => "true";
+  verify      => "true";
+  copy_backup => "$(copy_backup)";
+
+}
+
+body depth_search searchsettings_exclude_safe( depth, exclude_dirs, 
+  include_basedir ) {
+
+  depth           => "$(depth)";
+  exclude_dirs    => { "@(exclude_dirs)" };
+  include_basedir => "$(include_basedir)"; 
+
+}
+
+body perms mode_owner_group_safe( mode, owners, groups ) {
+
+  mode    => "$(mode)";
+  owners  => { "$(owners)" };
+  groups  => { "$(groups)" };
+
+}
+
+body action actionsettings_fix_silent_safe {
+
+  # In the event of an emergency, we may not want to wait 1 minute for ifelapsed
+  # to expire - make everything in this file immediate.
+  ifelapsed         => "0";
+  action_policy     => "fix";
+  expireafter       => "120";
+  log_level         => "inform";
+
+}
+
+body file_select files_matching_not_leaf_safe( leaf_name, file_types ) {
+
+  leaf_name       => { "@(leaf_name)" };
+  file_types      => { "@(file_types)" };
+  file_result     => "!leaf_name.file_types";
+
+}

@@ -1,0 +1,68 @@
+################################################################################
+#
+# group.cf is the only dependency of failsafe.cf; it sets the group name and 
+# mothership for the ITS group using Cfengine and allows for group-specific 
+# failsafe policy implementation in bundle group_failsafe.
+#
+# Failsafe.cf is intended to restore order to agents with syntax errors
+# in their policy files, so clients can always pull policy updates from
+# the master.  As such, failsafe.cf and any dependencies are very important
+# files and should not be edited unless there is a compelling technical
+# reason to do so and the edit has been thoroughly tested.
+#
+#
+# IMPORTANT:
+#
+# If you modify this file, copy your changes into the set of policy you use to
+# bootstrap clients.  For dcsunix, this is:
+#
+# /var/cfengine/masterfiles/linux/usr/local/src/cfengine3bootstrap/
+#
+################################################################################
+
+bundle common group {
+
+vars:
+
+  any::
+
+    "groupname"  string => "dcsunix";
+
+    "mothership"
+      string => "<%= @policy_server  %>",
+      policy => "overridable";
+
+  ## To sever policy updates from the mothership and work on this host in
+  ## isolation, uncomment this stanza.  Make sure to comment back out
+  ## when finished!!
+
+  #any::
+  #
+  #  "mothership"
+  #    string => "localhost",
+  #    policy => "overridable";
+
+classes:
+
+  "default_mothership" 
+    expression => strcmp("$(mothership)", "<%= @policy_server %>"),
+      handle   => "are_you_my_mother";
+
+reports:
+
+  Hr07.!default_mothership::
+
+    "WARNING: Client $(sys.fqhost) pointed at mothership $(mothership)";
+
+}
+
+bundle agent group_failsafe {
+  
+
+reports:
+
+  !any::
+
+    "This is a holder for group-specific policy promises.";
+
+}
