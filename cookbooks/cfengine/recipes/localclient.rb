@@ -17,7 +17,7 @@ directory "/var/cfengine/masterfiles" do
   owner "root"
   group "root"
   mode "0755"
-  recursive :true
+  recursive true
   action :create
 end
 
