@@ -39,7 +39,6 @@ export PATH=${PATH}:${JAVA_HOME}/bin
 
 ### system-specific variables for JBoss instances
 export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} \
-		  -Djavax.net.ssl.trustStore=${CACERTS} \
 	    -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${JBOSS_LOGDIR}/${JBOSS_NODE}_heap.hprof \
 		  -Xloggc:${JBOSS_LOGDIR}/${JBOSS_NODE}/gc.log \
 		  ${ADDLJVAOPTS}" 
