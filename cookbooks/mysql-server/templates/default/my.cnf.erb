@@ -1,0 +1,54 @@
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+## Innodb Options
+innodb_file_per_table=1
+innodb_data_home_dir = /var/lib/mysql
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_log_group_home_dir = /var/lib/mysql
+innodb_log_files_in_group=2
+innodb_log_file_size=1G
+innodb_buffer_pool_size=64M
+innodb_thread_concurrency=8
+
+## MyISAM Options
+key_buffer_size = 512M
+myisam_sort_buffer_size = 64M
+
+# General Settings
+
+max_connections = 1200
+max_allowed_packet = 32M
+table_cache = 1200
+thread_cache_size = 8
+
+sort_buffer_size = 2M
+read_buffer_size = 2M
+read_rnd_buffer_size = 2M
+
+#tmpdir=/tmp
+tmp_table_size=32M
+max_heap_table_size = 32M
+
+# Query Cache
+query_cache_size = 32M
+query_cache_type = 1
+
+lower_case_table_names=1
+default-storage-engine=innodb
+
+[mysqldump]
+max_allowed_packet = 32M
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+# per Oracle SR 3-5089278561
+# accommodates dbs with big table counts for mysqldump
+# overrides default 6000
+open-files-limit = 21000
