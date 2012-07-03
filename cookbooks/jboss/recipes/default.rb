@@ -22,45 +22,45 @@
 
 include_recipe 'java'
 
-# Install jboss 
-# This is total YUCK, but no yum repo for me
-# and I didn't want to build CENTOS 6.x pkgs anyways
-# aasily swappable with package"jdk" do... stuff
+directory "#{node[:jboss][:tmpdir]}" do 
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+remote_file "#{node[:jboss][:tmpdir]}/#{node[:jboss][:jboss_file]}" do
+  source "#{node[:jboss][:jboss_url]}"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+  notifies :run, "bash[install_jboss]", :immediately
+end
+
+# Install jboss
 bash "install_jboss" do
   user "root"
   cwd "/usr/local"
-  not_if do
-    File.exists?("#{node[:jboss][:jboss_home]}")
-  end
   code <<-EOH
-  /usr/bin/wget "#{node[:jboss][:jboss_url]}"
-  /bin/tar -zxf "#{node[:jboss][:jboss_file]}"
-  /bin/rm -f "#{node[:jboss][:jboss_file]}"
+  /bin/tar -zxf "#{node[:jboss][:tmpdir]}/#{node[:jboss][:jboss_file]}"
   EOH
+  action :nothing
 end
 
-# Setup jboss-apps dir
-directory "#{node[:jboss][:jboss_apps]}" do
-  owner "root"
-  group "root"
-  mode 0755
-  action :create
-end
-
-# Setup jboss-deploy dir
-directory "#{node[:jboss][:jboss_deploy]}" do
-  owner "root"
-  group "root"
-  mode 0755
-  action :create
-end
-
-# Setup jboss-log dir
-directory "#{node[:jboss][:jboss_logdir]}" do
-  owner "root"
-  group "root"
-  mode 0755
-  action :create
+# create "global" jboss dirs
+jboss_dirs = [  node[:jboss][:jboss_apps],
+                node[:jboss][:jboss_deploy],
+                node[:jboss][:jboss_logdir]
+              ]
+              
+jboss_dirs.each do |d|
+  directory "#{d}" do
+    owner "root"
+    group "root"
+    mode 0755
+    action :create
+  end
 end
 
 # setup each node in the list

@@ -7,17 +7,28 @@
 # All rights reserved - Do Not Redistribute
 #
 
+directory "#{node[:java][:tmpdir]}" do 
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+remote_file "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}" do
+  source "#{node[:java][:jdk_url]}"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+  notifies :run, "bash[install_jdk]", :immediately
+end
+
 # Install jdk
-# This is total YUCK, but no yum repo for me
-# and I didn't want to build CENTOS 6.x pkgs anyways
-# aasily swappable with package"jdk" do... stuff
 bash "install_jdk" do
   user "root"
   cwd "/usr/local"
-  not_if { File.exists?("#{node[:java][:java_home]}") }
   code <<-EOH
-  /usr/bin/wget "#{node[:java][:jdk_url]}"
-  /bin/tar -zxf "#{node[:java][:jdk_file]}"
-  /bin/rm -f "#{node[:java][:jdk_file]}"
+  /bin/tar -zxf "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}"
   EOH
+  action :nothing
 end
