@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-directory "#{node[:java][:tmpdir]}" do 
+directory node[:java][:tmpdir] do 
   owner "root"
   group "root"
   mode "0755"
@@ -15,7 +15,7 @@ directory "#{node[:java][:tmpdir]}" do
 end
 
 remote_file "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}" do
-  source "#{node[:java][:jdk_url]}"
+  source node[:java][:jdk_url]
   owner "root"
   group "root"
   mode "0644"
@@ -30,5 +30,5 @@ bash "install_jdk" do
   code <<-EOH
   /bin/tar -zxf "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}"
   EOH
-  action :nothing
+  not_if { File.exists?("#{node[:java][:java_home]}") }
 end

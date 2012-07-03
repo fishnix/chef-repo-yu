@@ -22,7 +22,7 @@
 
 include_recipe 'java'
 
-directory "#{node[:jboss][:tmpdir]}" do 
+directory node[:jboss][:tmpdir] do 
   owner "root"
   group "root"
   mode "0755"
@@ -30,7 +30,7 @@ directory "#{node[:jboss][:tmpdir]}" do
 end
 
 remote_file "#{node[:jboss][:tmpdir]}/#{node[:jboss][:jboss_file]}" do
-  source "#{node[:jboss][:jboss_url]}"
+  source node[:jboss][:jboss_url]
   owner "root"
   group "root"
   mode "0644"
@@ -45,7 +45,7 @@ bash "install_jboss" do
   code <<-EOH
   /bin/tar -zxf "#{node[:jboss][:tmpdir]}/#{node[:jboss][:jboss_file]}"
   EOH
-  action :nothing
+  not_if { File.exists?("#{node[:jboss][:jboss_home]}") }
 end
 
 # create "global" jboss dirs
@@ -55,7 +55,7 @@ jboss_dirs = [  node[:jboss][:jboss_apps],
               ]
               
 jboss_dirs.each do |d|
-  directory "#{d}" do
+  directory d do
     owner "root"
     group "root"
     mode 0755
@@ -67,15 +67,15 @@ end
 node[:jboss][:nodes].each do |n,c|
  
   # add user if doesn't exist already
-  user "#{c['user']}" do
+  user c['user'] do
     comment "JBoss User"
     action :create
   end
 
   # Setup jboss-apps dir
   directory "#{node[:jboss][:jboss_logdir]}/#{n}" do
-    owner "#{c['user']}"
-    group "#{c['user']}"
+    owner c['user']
+    group c['user']
     mode 0755
     action :create
   end
@@ -105,9 +105,9 @@ node[:jboss][:nodes].each do |n,c|
   # Create the nodes if they don't exist and the jboss_home dir does
   bash "create_node_#{n}" do
     user "root"
-    cwd "#{node[:jboss][:jboss_apps]}"
+    cwd node[:jboss][:jboss_apps]
     not_if { File.exists?("#{node[:jboss][:jboss_apps]}/#{n}") }
-    only_if { File.exists?("#{node[:jboss][:jboss_home]}") }
+    only_if { File.exists?(node[:jboss][:jboss_home]) }
     code <<-EOH
     cp -r #{node[:jboss][:jboss_home]}/server/#{c['type']} #{node[:jboss][:jboss_apps]}/#{n}
     EOH
@@ -116,8 +116,8 @@ node[:jboss][:nodes].each do |n,c|
   # create jboss'y subdirs
   %w{ data log tmp webapps work }.each do |d|
     directory "#{node[:jboss][:jboss_apps]}/#{n}/#{d}" do
-      owner "#{c['user']}"
-      group "#{c['user']}"
+      owner c['user']
+      group c['user']
       only_if { File.exists?("#{node[:jboss][:jboss_apps]}/#{n}") }
       mode "0755"
       action :create
@@ -130,7 +130,7 @@ node[:jboss][:nodes].each do |n,c|
     group "root"
     mode "0644"
     variables(
-      :ssltype => "#{node[:jboss][:ssltype]}"
+      :ssltype => node[:jboss][:ssltype]
     )
   end
   
@@ -139,11 +139,11 @@ node[:jboss][:nodes].each do |n,c|
   else
     # pull in a vagrant keystore
     remote_file "#{node[:jboss][:jboss_apps]}/#{n}/conf/server.keystore" do
-      source "#{node[:jboss][:keystore_url]}"
-      action :create_if_missing
+      source node[:jboss][:keystore_url]
       owner "root"
       group "root"
       mode "0644"
+      action :create_if_missing
     end
   end
   
