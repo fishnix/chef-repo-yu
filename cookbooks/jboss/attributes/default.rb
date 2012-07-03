@@ -2,6 +2,7 @@
 # assumes single jdk + jboss install per server
 # for simplicity... easy to make these node specific
 default[:jboss][:jboss_apps]    = '/usr/local/jboss-apps'
+default[:jboss][:jboss_deploy]  = '/usr/local/jboss-deploy'
 default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
 default[:jboss][:jboss_logdir]  = "/var/log/jboss"
 default[:jboss][:jboss_web_deploy] = "deploy/jbossweb.sar"

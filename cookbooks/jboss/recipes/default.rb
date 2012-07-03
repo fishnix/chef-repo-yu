@@ -47,7 +47,15 @@ directory "#{node[:jboss][:jboss_apps]}" do
   action :create
 end
 
-# Setup jboss-apps dir
+# Setup jboss-deploy dir
+directory "#{node[:jboss][:jboss_deploy]}" do
+  owner "root"
+  group "root"
+  mode 0755
+  action :create
+end
+
+# Setup jboss-log dir
 directory "#{node[:jboss][:jboss_logdir]}" do
   owner "root"
   group "root"
