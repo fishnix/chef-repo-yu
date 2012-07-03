@@ -2,12 +2,15 @@
 # assumes single jdk + jboss install per server
 # for simplicity... easy to make these node specific
 default[:jboss][:jboss_apps]    = '/usr/local/jboss-apps'
+default[:jboss][:jboss_deploy]  = '/usr/local/jboss-deploy'
 default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
 default[:jboss][:jboss_logdir]  = "/var/log/jboss"
+default[:jboss][:jboss_web_deploy] = "deploy/jbossweb.sar"
 
 # Where should I get my jboss + jdk from? yeah, yeah, packages! I know...
 default[:jboss][:jboss_file]    = 'jboss-eap-5.1.2.tar.gz'
 default[:jboss][:jboss_url]     = 'https://s3.amazonaws.com/chef-misc/pkg/jboss-eap-5.1.2.tar.gz'
+default[:jboss][:tmpdir]        = "/tmp"
 
 # Node specific settings
 # 'type' is the jboss instance type: all, default, minimal, production, standard, web

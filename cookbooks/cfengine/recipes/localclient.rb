@@ -13,17 +13,11 @@ yum_package "cfengine" do
   action [ :install, :upgrade ]
 end
 
-directory "/var/cfengine/" do
-  owner "root"
-  group "root"
-  mode "0755"
-  action :create
-end
-
 directory "/var/cfengine/masterfiles" do
   owner "root"
   group "root"
   mode "0755"
+  recursive true
   action :create
 end
 
