@@ -90,7 +90,7 @@ node[:jboss][:nodes].each do |n,c|
       source "jboss_init.erb"
       owner "root"
       group "root"
-      mode 0555
+      mode "0555"
       #notifies :restart, resources(:service => "jboss_#{n}")
   end
 
@@ -111,8 +111,28 @@ node[:jboss][:nodes].each do |n,c|
       owner "#{c['user']}"
       group "#{c['user']}"
       only_if { File.exists?("#{node[:jboss][:jboss_apps]}/#{n}") }
-      mode 0755
+      mode "0755"
       action :create
+    end
+  end
+  
+  template "#{node[:jboss][:jboss_apps]}/#{n}/#{node[:jboss][:jboss_web_deploy]}/server.xml" do
+    source "jbossweb_server_xml.erb"
+    owner "root"
+    group "root"
+    mode "0644"
+    variables(
+      :ssltype => "#{node[:jboss][:ssltype]}"
+    )
+  end
+  
+  if node[:jboss][:ssltype] == "native"
+    # copy/generate some crts + keys
+  else
+    # pull in a vagrant keystore
+    remote_file "#{node[:jboss][:jboss_apps]}/#{n}/conf/server.keystore" do
+      source "#{node[:jboss][:keystore_url]}"
+      action :create_if_missing
     end
   end
   
@@ -120,7 +140,7 @@ node[:jboss][:nodes].each do |n,c|
     source "jmx-console-users.properties.erb"
     owner "root"
     group "root"
-    mode 0444
+    mode "0644"
   end
     
   service "jboss_#{n}" do

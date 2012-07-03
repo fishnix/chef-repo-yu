@@ -4,6 +4,7 @@
 default[:jboss][:jboss_apps]    = '/usr/local/jboss-apps'
 default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
 default[:jboss][:jboss_logdir]  = "/var/log/jboss"
+default[:jboss][:jboss_web_deploy] = "deploy/jbossweb.sar"
 
 # Where should I get my jboss + jdk from? yeah, yeah, packages! I know...
 default[:jboss][:jboss_file]    = 'jboss-eap-5.1.2.tar.gz'
