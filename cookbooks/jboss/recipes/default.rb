@@ -141,6 +141,9 @@ node[:jboss][:nodes].each do |n,c|
     remote_file "#{node[:jboss][:jboss_apps]}/#{n}/conf/server.keystore" do
       source "#{node[:jboss][:keystore_url]}"
       action :create_if_missing
+      owner "root"
+      group "root"
+      mode "0644"
     end
   end
   
