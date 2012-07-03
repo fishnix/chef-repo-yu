@@ -44,8 +44,9 @@ bash "install_jboss" do
   cwd "/usr/local"
   code <<-EOH
   /bin/tar -zxf "#{node[:jboss][:tmpdir]}/#{node[:jboss][:jboss_file]}"
+  chown -Rh root:root "#{node[:jboss][:jboss_home]}"
   EOH
-  not_if { File.exists?("#{node[:jboss][:jboss_home]}") }
+  not_if { File.exists?(node[:jboss][:jboss_home]) }
 end
 
 # create "global" jboss dirs

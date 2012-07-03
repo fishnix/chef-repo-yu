@@ -30,5 +30,5 @@ bash "install_jdk" do
   code <<-EOH
   /bin/tar -zxf "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}"
   EOH
-  not_if { File.exists?("#{node[:java][:java_home]}") }
+  not_if { File.exists?(node[:java][:java_home]) }
 end
