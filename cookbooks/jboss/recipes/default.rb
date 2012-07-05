@@ -154,7 +154,17 @@ node[:jboss][:nodes].each do |n,c|
     group "root"
     mode "0644"
   end
-    
+  
+  c['additional_jboss_libs'].each do |l,u|
+    remote_file "#{node[:jboss][:jboss_apps]}/#{n}/lib/#{l}" do
+      source u
+      owner "root"
+      group "root"
+      mode "0644"
+      action :create_if_missing
+    end
+  end
+  
   service "jboss_#{n}" do
     service_name "jboss_#{n}"
     action :enable

@@ -28,7 +28,8 @@ default[:jboss][:nodes] = { 'node00' => { 'type'                    => 'all',
                                           'maxheap'                 => '1024m',
                                           'minheap'                 => '1024m',
                                           'additional_jboss_opts'   => [],
-                                          'additional_java_opts'    => [] 
+                                          'additional_java_opts'    => [],
+                                          'additional_jboss_libs'   => {}
                                         },
                             'node01' => { 'type'                    => 'all',
                                           'node_enabled'            => false, 
@@ -44,7 +45,8 @@ default[:jboss][:nodes] = { 'node00' => { 'type'                    => 'all',
                                           'maxheap'                 => '1024m',
                                           'minheap'                 => '1024m',
                                           'additional_jboss_opts'   => [],
-                                          'additional_java_opts'    => [] 
+                                          'additional_java_opts'    => [],
+                                          'additional_jboss_libs'   => {}
                                         }
                             }
 
