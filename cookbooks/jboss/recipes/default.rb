@@ -124,7 +124,7 @@ node[:jboss][:nodes].each do |n,c|
       action :create
     end
   end
-  
+
   template "#{node[:jboss][:jboss_apps]}/#{n}/#{node[:jboss][:jboss_web_deploy]}/server.xml" do
     source "jbossweb_server_xml.erb"
     owner "root"
@@ -133,6 +133,23 @@ node[:jboss][:nodes].each do |n,c|
     variables(
       :ssltype => node[:jboss][:ssltype]
     )
+  end
+  
+  template "#{node[:jboss][:jboss_apps]}/#{n}/conf/props/jmx-console-users.properties" do
+    source "jmx-console-users.properties.erb"
+    owner "root"
+    group "root"
+    mode "0644"
+  end
+  
+  # conf/bootstrap templates
+  %w{ profile.xml vfs.xml }.each do |t|
+    template "#{node[:jboss][:jboss_apps]}/#{n}/conf/bootstrap/#{t}" do
+      source "#{t}.erb"
+      owner "root"
+      group "root"
+      mode "0644"
+    end
   end
   
   if node[:jboss][:ssltype] == "native"
@@ -146,13 +163,6 @@ node[:jboss][:nodes].each do |n,c|
       mode "0644"
       action :create_if_missing
     end
-  end
-  
-  template "#{node[:jboss][:jboss_apps]}/#{n}/conf/props/jmx-console-users.properties" do
-    source "jmx-console-users.properties.erb"
-    owner "root"
-    group "root"
-    mode "0644"
   end
   
   c['additional_jboss_libs'].each do |l,u|

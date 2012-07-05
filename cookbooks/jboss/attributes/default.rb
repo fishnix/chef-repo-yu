@@ -7,6 +7,10 @@ default[:jboss][:jboss_home]    = '/usr/local/jboss-eap-5.1/jboss-as'
 default[:jboss][:jboss_logdir]  = "/var/log/jboss"
 default[:jboss][:jboss_web_deploy] = "deploy/jbossweb.sar"
 
+# List additional deploy directories
+# These might be in the format '${jboss.server.home.url}webapps'
+default[:jboss][:additional_deploy_dirs] = [ ]
+
 # Where should I get my jboss + jdk from? yeah, yeah, packages! I know...
 default[:jboss][:jboss_file]    = 'jboss-eap-5.1.2.tar.gz'
 default[:jboss][:jboss_url]     = 'https://s3.amazonaws.com/chef-misc/pkg/jboss-eap-5.1.2.tar.gz'
