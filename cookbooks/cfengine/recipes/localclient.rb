@@ -40,7 +40,7 @@ end
     source "#{t}.erb"
     owner "root"
     group "root"
-    mode 0444
+    mode "0444"
     variables(
       :policy_server => "localhost"
     )
@@ -51,17 +51,9 @@ end
 cookbook_file "/etc/sudoers.d/vagrant" do
   source "sudoers.d_vagrant"
   action :create_if_missing
+  mode "0440"
 end
 
 misc_blackhole node[:cfengine][:policy_server_ip] do
  action :create_if_missing
 end
-
-# bash "blackhole_phone_home" do
-#   user "root"
-#   cwd "/tmp"
-#   code <<-EOH
-#   echo "Blackholing policy server..."
-#   /sbin/ip route add blackhole #{node[:cfengine][:policy_server_ip]}
-#   EOH
-# end
