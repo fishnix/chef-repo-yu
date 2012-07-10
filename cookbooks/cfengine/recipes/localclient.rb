@@ -31,7 +31,6 @@ bash "set_localhost_policysvr" do
   sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/group.cf
   sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/promises.cf
   EOH
-  action :nothing
 end
 
 # standup boilerplate inputs
@@ -44,14 +43,13 @@ end
     variables(
       :policy_server => "localhost"
     )
-    notifies :run, resources(:bash => "set_localhost_policysvr")
   end
 end
 
 cookbook_file "/etc/sudoers.d/vagrant" do
+  mode "0440"
   source "sudoers.d_vagrant"
   action :create_if_missing
-  mode "0440"
 end
 
 misc_blackhole node[:cfengine][:policy_server_ip] do
