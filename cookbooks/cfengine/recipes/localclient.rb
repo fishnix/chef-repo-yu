@@ -7,10 +7,12 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "yum"
+#include_recipe "yum"
 
 yum_package "cfengine" do
+  package_name "#{node[:cfengine][:cfengine_package]}"
   action [ :install, :upgrade ]
+  options "--nogpgcheck"
 end
 
 directory "/var/cfengine/masterfiles" do
@@ -19,6 +21,17 @@ directory "/var/cfengine/masterfiles" do
   mode "0755"
   recursive true
   action :create
+end
+
+bash "set_localhost_policysvr" do
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  echo "Killing policy server in group.cf + promises.cf..."
+  sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/group.cf
+  sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/promises.cf
+  EOH
+  action :nothing
 end
 
 # standup boilerplate inputs
@@ -31,18 +44,24 @@ end
     variables(
       :policy_server => "localhost"
     )
+    notifies :run, resources(:bash => "set_localhost_policysvr")
   end
 end
 
-
-bash "kill_phone_homes" do
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-  echo "Killing policy server in group.cf + promises.cf..."
-  sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/group.cf
-  sed -i 's/#{node[:cfengine][:policy_server]}/localhost/' #{node[:cfengine][:masterfiles]}/inputs/dcsunix/promises.cf
-  echo "Blackholing policy server..."
-  /sbin/ip route add blackhole #{node[:cfengine][:policy_server_ip]}
-  EOH
+cookbook_file "/etc/sudoers.d/vagrant" do
+  source "sudoers.d_vagrant"
+  action :create_if_missing
 end
+
+misc_blackhole node[:cfengine][:policy_server_ip] do
+ action :create_if_missing
+end
+
+# bash "blackhole_phone_home" do
+#   user "root"
+#   cwd "/tmp"
+#   code <<-EOH
+#   echo "Blackholing policy server..."
+#   /sbin/ip route add blackhole #{node[:cfengine][:policy_server_ip]}
+#   EOH
+# end

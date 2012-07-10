@@ -1,0 +1,1 @@
+default[:cfengine][:cfengine_package] = "cfengine"
