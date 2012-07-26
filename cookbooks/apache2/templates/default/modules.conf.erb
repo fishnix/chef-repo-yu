@@ -1,0 +1,203 @@
+#
+# Dynamic Shared Object (DSO) Support
+#
+# To be able to use the functionality of a module which was built as a DSO you
+# have to place corresponding `LoadModule' lines at this location so the
+# directives contained in it are actually available _before_ they are used.
+# Statically compiled modules (those listed by `httpd -l') do not need
+# to be loaded here.
+#
+# Example:
+# LoadModule foo_module modules/mod_foo.so
+#
+LoadModule auth_basic_module modules/mod_auth_basic.so
+# LoadModule auth_digest_module modules/mod_auth_digest.so
+LoadModule authn_file_module modules/mod_authn_file.so
+# LoadModule authn_alias_module modules/mod_authn_alias.so
+# LoadModule authn_anon_module modules/mod_authn_anon.so
+# LoadModule authn_dbm_module modules/mod_authn_dbm.so
+# LoadModule authn_default_module modules/mod_authn_default.so
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule authz_user_module modules/mod_authz_user.so
+# LoadModule authz_owner_module modules/mod_authz_owner.so
+# LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+# LoadModule authz_dbm_module modules/mod_authz_dbm.so
+# LoadModule authz_default_module modules/mod_authz_default.so
+# LoadModule ldap_module modules/mod_ldap.so
+# LoadModule authnz_ldap_module modules/mod_authnz_ldap.so
+# LoadModule include_module modules/mod_include.so
+LoadModule log_config_module modules/mod_log_config.so
+LoadModule logio_module modules/mod_logio.so
+LoadModule env_module modules/mod_env.so
+LoadModule ext_filter_module modules/mod_ext_filter.so
+LoadModule mime_magic_module modules/mod_mime_magic.so
+LoadModule expires_module modules/mod_expires.so
+LoadModule deflate_module modules/mod_deflate.so
+LoadModule headers_module modules/mod_headers.so
+LoadModule usertrack_module modules/mod_usertrack.so
+LoadModule setenvif_module modules/mod_setenvif.so
+LoadModule mime_module modules/mod_mime.so
+# LoadModule dav_module modules/mod_dav.so
+LoadModule status_module modules/mod_status.so
+# LoadModule autoindex_module modules/mod_autoindex.so
+# LoadModule info_module modules/mod_info.so
+# LoadModule dav_fs_module modules/mod_dav_fs.so
+LoadModule vhost_alias_module modules/mod_vhost_alias.so
+LoadModule negotiation_module modules/mod_negotiation.so
+LoadModule dir_module modules/mod_dir.so
+LoadModule actions_module modules/mod_actions.so
+LoadModule speling_module modules/mod_speling.so
+# LoadModule userdir_module modules/mod_userdir.so
+LoadModule alias_module modules/mod_alias.so
+LoadModule rewrite_module modules/mod_rewrite.so
+# LoadModule proxy_module modules/mod_proxy.so
+# LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+# LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
+# LoadModule proxy_http_module modules/mod_proxy_http.so
+# LoadModule proxy_connect_module modules/mod_proxy_connect.so
+# LoadModule cache_module modules/mod_cache.so
+# LoadModule suexec_module modules/mod_suexec.so
+# LoadModule disk_cache_module modules/mod_disk_cache.so
+# LoadModule file_cache_module modules/mod_file_cache.so
+# LoadModule mem_cache_module modules/mod_mem_cache.so
+LoadModule cgi_module modules/mod_cgi.so
+# LoadModule version_module modules/mod_version.so
+
+#
+# The following modules are not loaded by default:
+#
+#LoadModule cern_meta_module modules/mod_cern_meta.so
+#LoadModule asis_module modules/mod_asis.so
+
+
+#
+# UserDir: The name of the directory that is appended onto a user's home
+# directory if a ~user request is received.
+#
+# The path to the end user account 'public_html' directory must be
+# accessible to the webserver userid.  This usually means that ~userid
+# must have permissions of 711, ~userid/public_html must have permissions
+# of 755, and documents contained therein must be world-readable.
+# Otherwise, the client will only receive a "403 Forbidden" message.
+#
+# See also: http://httpd.apache.org/docs/misc/FAQ.html#forbidden
+#
+<IfModule mod_userdir.c>
+    #
+    # UserDir is disabled by default since it can confirm the presence
+    # of a username on the system (depending on home directory
+    # permissions).
+    #
+    UserDir disable
+
+    #
+    # To enable requests to /~user/ to serve the user's public_html
+    # directory, remove the "UserDir disable" line above, and uncomment
+    # the following line instead:
+    # 
+    #UserDir public_html
+
+</IfModule>
+
+#
+# Control access to UserDir directories.  The following is an example
+# for a site where these directories are restricted to read-only.
+#
+#<Directory /home/*/public_html>
+#    AllowOverride FileInfo AuthConfig Limit
+#    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+#    <Limit GET POST OPTIONS>
+#        Order allow,deny
+#        Allow from all
+#    </Limit>
+#    <LimitExcept GET POST OPTIONS>
+#        Order deny,allow
+#        Deny from all
+#    </LimitExcept>
+#</Directory>
+
+#
+# The mod_mime_magic module allows the server to use various hints from the
+# contents of the file itself to determine its type.  The MIMEMagicFile
+# directive tells the module where the hint definitions are located.
+#
+<IfModule mod_mime_magic.c>
+#   MIMEMagicFile /usr/share/magic.mime
+    MIMEMagicFile conf/magic
+</IfModule>
+
+#
+# WebDAV module configuration section.
+# 
+<IfModule mod_dav_fs.c>
+    # Location of the WebDAV lock database.
+    DAVLockDB /var/lib/dav/lockdb
+</IfModule>
+
+
+<IfModule mod_negotiation.c>
+<IfModule mod_include.c>
+    <Directory "/var/www/error">
+        AllowOverride None
+        Options IncludesNoExec
+        AddOutputFilter Includes html
+        AddHandler type-map var
+        Order allow,deny
+        Allow from all
+        LanguagePriority en es de fr
+        ForceLanguagePriority Prefer Fallback
+    </Directory>
+
+#    ErrorDocument 400 /error/HTTP_BAD_REQUEST.html.var
+#    ErrorDocument 401 /error/HTTP_UNAUTHORIZED.html.var
+#    ErrorDocument 403 /error/HTTP_FORBIDDEN.html.var
+#    ErrorDocument 404 /error/HTTP_NOT_FOUND.html.var
+#    ErrorDocument 405 /error/HTTP_METHOD_NOT_ALLOWED.html.var
+#    ErrorDocument 408 /error/HTTP_REQUEST_TIME_OUT.html.var
+#    ErrorDocument 410 /error/HTTP_GONE.html.var
+#    ErrorDocument 411 /error/HTTP_LENGTH_REQUIRED.html.var
+#    ErrorDocument 412 /error/HTTP_PRECONDITION_FAILED.html.var
+#    ErrorDocument 413 /error/HTTP_REQUEST_ENTITY_TOO_LARGE.html.var
+#    ErrorDocument 414 /error/HTTP_REQUEST_URI_TOO_LARGE.html.var
+#    ErrorDocument 415 /error/HTTP_UNSUPPORTED_MEDIA_TYPE.html.var
+#    ErrorDocument 500 /error/HTTP_INTERNAL_SERVER_ERROR.html.var
+#    ErrorDocument 501 /error/HTTP_NOT_IMPLEMENTED.html.var
+#    ErrorDocument 502 /error/HTTP_BAD_GATEWAY.html.var
+#    ErrorDocument 503 /error/HTTP_SERVICE_UNAVAILABLE.html.var
+#    ErrorDocument 506 /error/HTTP_VARIANT_ALSO_VARIES.html.var
+
+</IfModule>
+</IfModule>
+
+#
+# Proxy Server directives. Uncomment the following lines to
+# enable the proxy server:
+#
+#<IfModule mod_proxy.c>
+#ProxyRequests On
+#
+#<Proxy *>
+#    Order deny,allow
+#    Deny from all
+#    Allow from .example.com
+#</Proxy>
+
+#
+# Enable/disable the handling of HTTP/1.1 "Via:" headers.
+# ("Full" adds the server version; "Block" removes all outgoing Via: headers)
+# Set to one of: Off | On | Full | Block
+#
+#ProxyVia On
+
+#
+# To enable a cache of proxied content, uncomment the following lines.
+# See http://httpd.apache.org/docs/2.2/mod/mod_cache.html for more details.
+#
+#<IfModule mod_disk_cache.c>
+#   CacheEnable disk /
+#   CacheRoot "/var/cache/mod_proxy"
+#</IfModule>
+#
+
+#</IfModule>
+# End of proxy directives.
