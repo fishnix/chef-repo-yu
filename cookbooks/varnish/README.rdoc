@@ -1,0 +1,10 @@
+= DESCRIPTION:
+
+Cookbook to install and configure varnish cache
+
+= REQUIREMENTS:
+
+= ATTRIBUTES:
+
+= USAGE:
+

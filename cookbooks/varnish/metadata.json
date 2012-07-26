@@ -1,0 +1,29 @@
+{
+  "maintainer": "E Camden Fisher",
+  "long_description": "= DESCRIPTION:\n\nCookbook to install and configure varnish cache\n\n= REQUIREMENTS:\n\n= ATTRIBUTES:\n\n= USAGE:\n\n",
+  "replacing": {
+  },
+  "maintainer_email": "fish@fishnix.net",
+  "groupings": {
+  },
+  "description": "Installs/Configures varnish",
+  "recommendations": {
+  },
+  "attributes": {
+  },
+  "platforms": {
+  },
+  "suggestions": {
+  },
+  "dependencies": {
+  },
+  "version": "0.0.1",
+  "conflicting": {
+  },
+  "name": "varnish",
+  "recipes": {
+  },
+  "providing": {
+  },
+  "license": "Apache 2.0"
+}

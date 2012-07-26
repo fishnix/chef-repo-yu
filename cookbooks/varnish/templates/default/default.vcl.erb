@@ -1,0 +1,120 @@
+backend default {
+  .host = "<%= node[:varnish][:backend_host] %>";
+  .port = "<%= node[:varnish][:backend_port] %>";
+}
+
+/* Allow purge from specific places */
+acl purge {
+  "localhost";
+  "<%= node[:varnish][:backend_host] %>";
+}
+
+sub vcl_recv {
+  
+  /* Fixup gzip compression */
+  if (req.http.Accept-Encoding) {
+		if (req.url ~ "\.(jpg|png|gif|gz|tgz|bz2|tbz|mp3|ogg)$") {
+			# No point in compressing these
+			remove req.http.Accept-Encoding;
+		} elsif (req.http.Accept-Encoding ~ "gzip") {
+			set req.http.Accept-Encoding = "gzip";
+		} elsif (req.http.Accept-Encoding ~ "deflate") {
+			set req.http.Accept-Encoding = "deflate";
+		} else {
+			# unkown algorithm
+			remove req.http.Accept-Encoding;
+		}
+	}
+  
+  # allow PURGE requests
+  if (req.request == "PURGE") {
+          if (!client.ip ~ purge) {
+                  error 405 "Not allowed.";
+          }
+          return (lookup);
+  }
+
+  if (req.request != "GET" &&
+      req.request != "HEAD" &&
+      req.request != "PUT" &&
+      req.request != "POST" &&
+      req.request != "TRACE" &&
+      req.request != "OPTIONS" &&
+      req.request != "DELETE") {
+      /* Non-RFC2616 or CONNECT which is weird. */
+      return(pipe);
+  }
+
+  if (req.request != "GET" && req.request != "HEAD") {
+      /* We only deal with GET and HEAD by default */
+      return (pass);
+  }
+
+  if (req.url ~ "^(/pages/.*|.*\.(css|js|png|jpg|gif|jpeg))$") {
+		unset req.http.cookie;
+	}
+
+	set req.grace = 30s;
+}
+
+
+sub vcl_fetch {
+
+  /* Cache static content for 1h */
+  if (req.url ~ "^(/pages/.*|.*\.(css|js|png|jpg|gif|jpeg))$") {
+	  remove beresp.http.set-cookie;
+    set beresp.ttl = 1h;
+    set beresp.http.cache-control = "max-age=3600, public";
+  }
+  
+  /* Cache perm redirects for 1h */
+  if (beresp.status == 301) {
+    set beresp.ttl = 1h;
+    return(deliver);
+  }
+
+  /* Cache the home page for 180s */
+  if (req.url == "/index.php" || req.url == "/" ) {
+	  remove beresp.http.set-cookie;
+    set beresp.ttl = 180s;
+    set beresp.http.cache-control = "max-age=180, public";
+  }
+
+  # Allow items to be stale if backend is MIA.
+	set beresp.grace = 1h;
+
+}
+
+sub vcl_deliver {
+  # If we hit cache, return X-Header that we did
+  if (obj.hits > 0) {
+    set resp.http.X-Varnish-Cache = "HIT";
+    set resp.http.X-Varnish-Hits = obj.hits;
+  } else {
+    set resp.http.X-Varnish-Cache = "MISS";
+  }
+  # Strip away some extraneous headers
+  # Apache Version Red Hat, PHP Version, Varnish Version
+  unset resp.http.X-Varnish;
+  unset resp.http.Via;
+  unset resp.http.X-Powered-By;
+  unset resp.http.Server;
+}
+
+sub vcl_hit {
+        if (req.request == "PURGE") {
+                purge;
+                error 200 "Purged.";
+        }
+}
+
+sub vcl_miss {
+        if (req.request == "PURGE") {
+                error 404 "Not in cache";
+        }
+}
+
+sub vcl_pipe {
+    # This is not necessary if you do not do any request rewriting.
+    set req.http.connection = "close";
+}
