@@ -16,20 +16,32 @@ user "#{node[:fuse_esb][:user]}" do
   action :create
 end
 
+
+directory node[:fuse_esb][:tmpdir] do 
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+remote_file "#{node[:fuse_esb][:tmpdir]}/#{node[:fuse_esb][:file]}" do
+  source node[:fuse_esb][:url]
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+  notifies :run, "bash[install_fuse_esb]", :immediately
+end
+
 # Install fuse_esb
-# This is total YUCK, but no yum repo for me
-# and I didn't want to build CENTOS 6.x pkgs anyways
-# aasily swappable with package"fuse-esb" do... stuff
 bash "install_fuse_esb" do
   user "root"
   cwd "/usr/local"
-  not_if { File.exists?("#{node[:fuse_esb][:install]}") }
   code <<-EOH
-  /usr/bin/wget "#{node[:fuse_esb][:url]}"
-  /bin/tar -zxf "#{node[:fuse_esb][:file]}"
-  /bin/rm -f "#{node[:fuse_esb][:file]}"
-  chown -Rh root:root #{node[:fuse_esb][:install]}
+  /bin/tar -zxf "#{node[:fuse_esb][:tmpdir]}/#{node[:fuse_esb][:file]}"
+  chown -Rh root:root "#{node[:fuse_esb][:install]}"
   EOH
+  not_if { File.exists?("#{node[:fuse_esb][:install]}") }
 end
 
 link "#{node[:fuse_esb][:home]}" do
