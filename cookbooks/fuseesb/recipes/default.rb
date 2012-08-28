@@ -39,7 +39,7 @@ bash "install_fuseesb" do
   cwd "/usr/local"
   code <<-EOH
   /bin/tar -zxf "#{node[:fuseesb][:tmpdir]}/#{node[:fuseesb][:file]}"
-  chown -Rh root:root "#{node[:fuseesb][:install]}"
+  chown -Rh "#{node[:fuseesb][:user]}":"#{node[:fuseesb][:user]}" "#{node[:fuseesb][:install]}"
   EOH
   not_if { File.exists?("#{node[:fuseesb][:install]}") }
 end

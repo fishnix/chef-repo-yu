@@ -38,7 +38,7 @@ bash "install_fusemc" do
   cwd "/usr/local"
   code <<-EOH
   /bin/tar -zxf "#{node[:fusemc][:tmpdir]}/#{node[:fusemc][:file]}"
-  chown -Rh root:root "#{node[:fusemc][:install]}"
+  chown -Rh "#{node[:fusemc][:user]}":"#{node[:fusemc][:user]}" "#{node[:fusemc][:install]}"
   EOH
   not_if { File.exists?("#{node[:fusemc][:install]}") }
 end
