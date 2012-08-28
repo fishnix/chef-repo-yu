@@ -3,7 +3,7 @@ description "Role to create a Fuse MQ server on vagrant"
 run_list(
   "recipe[misc::hosts]",
   "recipe[java]",
-  "recipe[fuse-esb]",
+  "recipe[fuseesb]",
   "recipe[jenkins]"
 )
 default_attributes(
@@ -13,6 +13,7 @@ default_attributes(
             },
   "fuse_esb" => {   "url"   => 'http://leleupi.its.yale.edu:8181/PKG/fuse-esb-full-7.0.0.fuse-061.tar.gz',
                     "file"  => 'fuse-esb-full-7.0.0.fuse-061.tar.gz',
-                    "home"  => '/usr/local/fuse-esb'
+                    "home"  => '/usr/local/fuse-esb',
+                    "user"  => 'vagrant'
               }
 )

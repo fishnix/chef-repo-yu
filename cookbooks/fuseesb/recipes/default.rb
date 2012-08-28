@@ -11,58 +11,58 @@
 include_recipe 'java'
 
 # add user if doesn't exist already
-user "#{node[:fuse_esb][:user]}" do
+user "#{node[:fuseesb][:user]}" do
   comment "App User"
   action :create
 end
 
 
-directory node[:fuse_esb][:tmpdir] do 
+directory node[:fuseesb][:tmpdir] do 
   owner "root"
   group "root"
   mode "0755"
   action :create
 end
 
-remote_file "#{node[:fuse_esb][:tmpdir]}/#{node[:fuse_esb][:file]}" do
-  source node[:fuse_esb][:url]
+remote_file "#{node[:fuseesb][:tmpdir]}/#{node[:fuseesb][:file]}" do
+  source node[:fuseesb][:url]
   owner "root"
   group "root"
   mode "0644"
   action :create_if_missing
-  notifies :run, "bash[install_fuse_esb]", :immediately
+  notifies :run, "bash[install_fuseesb]", :immediately
 end
 
-# Install fuse_esb
-bash "install_fuse_esb" do
+# Install fuseesb
+bash "install_fuseesb" do
   user "root"
   cwd "/usr/local"
   code <<-EOH
-  /bin/tar -zxf "#{node[:fuse_esb][:tmpdir]}/#{node[:fuse_esb][:file]}"
-  chown -Rh root:root "#{node[:fuse_esb][:install]}"
+  /bin/tar -zxf "#{node[:fuseesb][:tmpdir]}/#{node[:fuseesb][:file]}"
+  chown -Rh root:root "#{node[:fuseesb][:install]}"
   EOH
-  not_if { File.exists?("#{node[:fuse_esb][:install]}") }
+  not_if { File.exists?("#{node[:fuseesb][:install]}") }
 end
 
-link "#{node[:fuse_esb][:home]}" do
-  to "#{node[:fuse_esb][:install]}"
-  only_if { File.exists?("#{node[:fuse_esb][:install]}") }
+link "#{node[:fuseesb][:home]}" do
+  to "#{node[:fuseesb][:install]}"
+  only_if { File.exists?("#{node[:fuseesb][:install]}") }
 end
 
 
-# create fuse_esb subdirs
+# create fuseesb subdirs
 %w{ data deploy etc instances lock }.each do |d|
-  directory "#{node[:fuse_esb][:install]}/#{d}" do
-    owner "#{node[:fuse_esb][:user]}"
-    group "#{node[:fuse_esb][:user]}"
-    only_if { File.exists?("#{node[:fuse_esb][:install]}") }
+  directory "#{node[:fuseesb][:install]}/#{d}" do
+    owner "#{node[:fuseesb][:user]}"
+    group "#{node[:fuseesb][:user]}"
+    only_if { File.exists?("#{node[:fuseesb][:install]}") }
     mode "0755"
     action :create
   end
 end
 
 # # system.properties
-# template "#{node[:fuse_esb][:fuse_esb_install]}/etc/system.properties" do
+# template "#{node[:fuseesb][:fuseesb_install]}/etc/system.properties" do
 #     source "system.properties.erb"
 #     owner "root"
 #     group "root"
@@ -76,8 +76,8 @@ template "/etc/sysconfig/fuse-esb" do
     group "root"
     mode "0444"
     variables(
-      :java_opts => node[:fuse_esb][:java_opts],
-      :instances => node[:fuse_esb][:instances].keys
+      :java_opts => node[:fuseesb][:java_opts],
+      :instances => node[:fuseesb][:instances].keys
     )
     #notifies :restart, resources(:service => "jboss_#{n}")
 end
