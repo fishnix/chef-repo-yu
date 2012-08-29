@@ -51,7 +51,7 @@ end
 
 
 # create fuseesb subdirs
-%w{ data deploy etc instances lock }.each do |d|
+%w{ data deploy etc instances }.each do |d|
   directory "#{node[:fuseesb][:install]}/#{d}" do
     owner "#{node[:fuseesb][:user]}"
     group "#{node[:fuseesb][:user]}"
