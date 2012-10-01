@@ -10,7 +10,7 @@
 #include_recipe "yum"
 
 yum_package "cfengine" do
-  package_name "#{node[:cfengine][:cfengine_package]}"
+  package_name node[:cfengine][:cfengine_package]
   action [ :install, :upgrade ]
   options "--nogpgcheck"
 end

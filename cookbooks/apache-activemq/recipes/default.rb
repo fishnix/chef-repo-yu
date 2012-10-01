@@ -9,7 +9,7 @@
 include_recipe 'java'
 
 # add user if doesn't exist already
-user "#{node[:apache_activemq][:user]}" do
+user node[:apache_activemq][:user] do
   comment "App User"
 end
 
@@ -20,7 +20,7 @@ end
 bash "install_activemq" do
   user "root"
   cwd "/usr/local"
-  not_if { File.exists?("#{node[:apache_activemq][:servicemix_install]}") }
+  not_if { File.exists?(node[:apache_activemq][:servicemix_install]) }
   code <<-EOH
   /usr/bin/wget "#{node[:apache_activemq][:servicemix_url]}"
   /bin/tar -zxf "#{node[:apache_activemq][:servicemix_file]}"
@@ -29,7 +29,7 @@ bash "install_activemq" do
   EOH
 end
 
-link "#{node[:apache_activemq][:servicemix_home]}" do
-  to "#{node[:apache_activemq][:servicemix_install]}"
-  only_if { File.exists?("#{node[:apache_activemq][:servicemix_install]}") }
+link node[:apache_activemq][:servicemix_home] do
+  to node[:apache_activemq][:servicemix_install]
+  only_if { File.exists?(node[:apache_activemq][:servicemix_install]) }
 end

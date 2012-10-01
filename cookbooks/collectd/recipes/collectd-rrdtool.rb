@@ -4,7 +4,7 @@ package "collectd-rrdtool" do
   action [ :install, :upgrade ]
 end
 
-directory "#{node[:collectd][:rrdtool][:data_dir]}" do
+directory node[:collectd][:rrdtool][:data_dir] do
   owner "root"
   group "root"
   mode "0755"
