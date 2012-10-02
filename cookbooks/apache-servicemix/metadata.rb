@@ -1,5 +1,5 @@
 maintainer       "E Camden Fisher"
-maintainer_email "fish@fishnix.net"
+maintainer_email "camden.fisher@yale.edu"
 license          "All rights reserved"
 description      "Installs/Configures apache-servicemix"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))

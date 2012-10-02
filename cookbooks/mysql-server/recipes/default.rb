@@ -7,10 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "mysql-server" do
   package_name "mysql-server"
   action [ :install, :upgrade ]

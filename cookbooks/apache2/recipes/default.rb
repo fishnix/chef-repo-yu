@@ -21,10 +21,6 @@
 # limitations under the License.
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "apache2" do
   case node[:platform]
     when "centos","redhat","fedora","suse"

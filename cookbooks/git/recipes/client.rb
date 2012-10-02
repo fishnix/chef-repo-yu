@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-include_recipe "yum"
-
 package "git" do
   package_name "git"
   action [ :install, :upgrade ]

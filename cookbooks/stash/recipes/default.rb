@@ -11,7 +11,7 @@ include_recipe 'java'
 include_recipe 'git::client'
 
 # add user if doesn't exist already
-user "#{node[:stash][:user]}" do
+user node[:stash][:user] do
   comment "App User"
 end
 
@@ -21,8 +21,8 @@ end
 # aasily swappable with package do... stuff
 bash "install_stash" do
   user "root"
-  cwd "#{node[:stash][:basedir]}"
-  not_if { File.exists?("#{node[:stash][:stash_install]}") }
+  cwd node[:stash][:basedir]
+  not_if { File.exists?(node[:stash][:stash_install]) }
   code <<-EOH
   /usr/bin/wget "#{node[:stash][:stash_url]}"
   /bin/tar -zxf "#{node[:stash][:stash_file]}"
@@ -31,7 +31,7 @@ bash "install_stash" do
   EOH
 end
 
-link "#{node[:stash][:stash_home]}" do
-  to "#{node[:stash][:stash_install]}"
-  only_if { File.exists?("#{node[:stash][:stash_install]}") }
+link node[:stash][:stash_home] do
+  to node[:stash][:stash_install]
+  only_if { File.exists?(node[:stash][:stash_install]) }
 end

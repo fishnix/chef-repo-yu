@@ -17,10 +17,6 @@
 # limitations under the License.
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "collectd" do
   package_name "collectd"
   action [ :install, :upgrade ]

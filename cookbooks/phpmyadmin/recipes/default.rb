@@ -7,10 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "phpmyadmin" do
   package_name "phpmyadmin"
   action [ :install, :upgrade ]

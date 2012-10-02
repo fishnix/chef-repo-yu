@@ -7,10 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "python" do
   package_name "python"
   action [:install, :upgrade]

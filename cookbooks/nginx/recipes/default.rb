@@ -7,10 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if platform?("centos","redhat","fedora")
-  include_recipe "yum"
-end
-
 package "nginx" do
   package_name "nginx"
   action [ :install, :upgrade ]
