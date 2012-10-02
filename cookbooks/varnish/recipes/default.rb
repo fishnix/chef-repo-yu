@@ -25,7 +25,7 @@ if platform?("centos","redhat","fedora")
   end
   
   %w{ varnish }.each do |pkg|
-    yum_package "#{pkg}" do
+    yum_package pkg do
       action [ :install, :upgrade ]
     end
   end

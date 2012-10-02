@@ -11,7 +11,7 @@
 include_recipe 'java'
 
 # add user if doesn't exist already
-user "#{node[:fuseesb][:user]}" do
+user node[:fuseesb][:user] do
   comment "App User"
   action :create
 end
@@ -41,21 +41,21 @@ bash "install_fuseesb" do
   /bin/tar -zxf "#{node[:fuseesb][:tmpdir]}/#{node[:fuseesb][:file]}"
   chown -Rh "#{node[:fuseesb][:user]}":"#{node[:fuseesb][:user]}" "#{node[:fuseesb][:install]}"
   EOH
-  not_if { File.exists?("#{node[:fuseesb][:install]}") }
+  not_if { File.exists?(node[:fuseesb][:install]) }
 end
 
-link "#{node[:fuseesb][:home]}" do
-  to "#{node[:fuseesb][:install]}"
-  only_if { File.exists?("#{node[:fuseesb][:install]}") }
+link node[:fuseesb][:home] do
+  to node[:fuseesb][:install]
+  only_if { File.exists?(node[:fuseesb][:install]) }
 end
 
 
 # create fuseesb subdirs
 %w{ data deploy etc instances }.each do |d|
   directory "#{node[:fuseesb][:install]}/#{d}" do
-    owner "#{node[:fuseesb][:user]}"
-    group "#{node[:fuseesb][:user]}"
-    only_if { File.exists?("#{node[:fuseesb][:install]}") }
+    owner node[:fuseesb][:user]
+    group node[:fuseesb][:user]
+    only_if { File.exists?(node[:fuseesb][:install]) }
     mode "0755"
     action :create
   end

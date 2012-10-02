@@ -10,7 +10,7 @@
 include_recipe 'java'
 
 # add user if doesn't exist already
-user "#{node[:fuse_mq][:user]}" do
+user node[:fuse_mq][:user] do
   comment "App User"
   action :create
 end
@@ -22,7 +22,7 @@ end
 bash "install_fuse_mq" do
   user "root"
   cwd "/usr/local"
-  not_if { File.exists?("#{node[:fuse_mq][:install]}") }
+  not_if { File.exists?(node[:fuse_mq][:install]) }
   code <<-EOH
   /usr/bin/wget "#{node[:fuse_mq][:url]}"
   /bin/tar -zxf "#{node[:fuse_mq][:file]}"
@@ -31,9 +31,9 @@ bash "install_fuse_mq" do
   EOH
 end
 
-link "#{node[:fuse_mq][:home]}" do
-  to "#{node[:fuse_mq][:install]}"
-  only_if { File.exists?("#{node[:fuse_mq][:install]}") }
+link node[:fuse_mq][:home] do
+  to node[:fuse_mq][:install]
+  only_if { File.exists?(node[:fuse_mq][:install]) }
 end
 
 

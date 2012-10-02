@@ -66,17 +66,11 @@ service "apache2" do
 end
 
 # Cleanup some stuff we don't want
-file "#{node[:apache][:dir]}/conf.d/proxy_ajp.conf" do
-  action :delete
-  backup false
-end
-file "#{node[:apache][:dir]}/conf.d/README" do
-  action :delete
-  backup false
-end
-file "#{node[:apache][:dir]}/conf.d/welcome.conf" do
-  action :delete
-  backup false
+%w{ proxy_ajp.conf README welcome.conf }.each do |rm|
+  file "#{node[:apache][:dir]}/conf.d/#{rm}" do
+    action :delete
+    backup false
+  end
 end
 
 directory node[:apache][:log_dir] do

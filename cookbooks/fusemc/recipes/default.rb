@@ -10,7 +10,7 @@
 include_recipe 'java'
 
 # add user if doesn't exist already
-user "#{node[:fusemc][:user]}" do
+user node[:fusemc][:user] do
   comment "App User"
   action :create
 end
@@ -40,12 +40,12 @@ bash "install_fusemc" do
   /bin/tar -zxf "#{node[:fusemc][:tmpdir]}/#{node[:fusemc][:file]}"
   chown -Rh "#{node[:fusemc][:user]}":"#{node[:fusemc][:user]}" "#{node[:fusemc][:install]}"
   EOH
-  not_if { File.exists?("#{node[:fusemc][:install]}") }
+  not_if { File.exists?(node[:fusemc][:install]) }
 end
 
-link "#{node[:fusemc][:home]}" do
-  to "#{node[:fusemc][:install]}"
-  only_if { File.exists?("#{node[:fusemc][:install]}") }
+link node[:fusemc][:home] do
+  to node[:fusemc][:install]
+  only_if { File.exists?(node[:fusemc][:install]) }
 end
 
 
