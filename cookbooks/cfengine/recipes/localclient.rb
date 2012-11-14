@@ -46,6 +46,14 @@ end
   end
 end
 
+file "#{node[:cfengine][:inputs]}/promises.cf" do
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+  
+end
+
 cookbook_file "/etc/sudoers.d/vagrant" do
   mode "0440"
   source "sudoers.d_vagrant"
