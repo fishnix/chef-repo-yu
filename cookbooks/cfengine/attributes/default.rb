@@ -1,1 +1,1 @@
-default[:cfengine][:cfengine_package] = "cfengine"
+default[:cfengine][:cfengine_package] = "cfengine-community"
