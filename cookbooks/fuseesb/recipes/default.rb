@@ -61,14 +61,6 @@ end
   end
 end
 
-# # system.properties
-# template "#{node[:fuseesb][:fuseesb_install]}/etc/system.properties" do
-#     source "system.properties.erb"
-#     owner "root"
-#     group "root"
-#     mode "0444"
-# end
-
 # sysconfig
 template "/etc/sysconfig/fuse-esb" do
     source "fuse-esb_sysconfig.erb"
@@ -76,8 +68,7 @@ template "/etc/sysconfig/fuse-esb" do
     group "root"
     mode "0444"
     variables(
-      :java_opts => node[:fuseesb][:java_opts],
-      :instances => node[:fuseesb][:instances].keys
+      :java_opts => node[:fuseesb][:java_opts]
     )
     #notifies :restart, resources(:service => "jboss_#{n}")
 end
