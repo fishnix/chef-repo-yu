@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe 'java'
+include_recipe 'jdk'
 
 user node[:jenkins][:jenkins_user] do
   comment "Applicatiion User"

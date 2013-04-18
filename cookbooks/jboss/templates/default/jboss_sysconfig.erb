@@ -22,7 +22,7 @@ JBOSS_APPS="<%= node[:jboss][:jboss_apps] %>"
 JBOSS_HOME="<%= node[:jboss][:jboss_home] %>"
 
 # Where JVM is installed
-JAVA_HOME="<%= node[:java][:java_home] %>"
+JAVA_HOME="<%= node[:jdk][:java_home] %>"
 
 # Multicast addres for JBoss clustering
 CLSTR_ADDR="<%= @node_conf['clusteraddr'] %>"

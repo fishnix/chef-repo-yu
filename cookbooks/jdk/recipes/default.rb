@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: java
+# Cookbook Name:: jdk
 # Recipe:: default
 #
 # Copyright 2012, YOUR_COMPANY_NAME
@@ -7,15 +7,15 @@
 # All rights reserved - Do Not Redistribute
 #
 
-directory node[:java][:tmpdir] do 
+directory node[:jdk][:tmpdir] do 
   owner "root"
   group "root"
   mode "0755"
   action :create
 end
 
-remote_file "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}" do
-  source node[:java][:jdk_url]
+remote_file "#{node[:jdk][:tmpdir]}/#{node[:jdk][:jdk_file]}" do
+  source node[:jdk][:jdk_url]
   owner "root"
   group "root"
   mode "0644"
@@ -28,7 +28,7 @@ bash "install_jdk" do
   user "root"
   cwd "/usr/local"
   code <<-EOH
-  /bin/tar -zxf "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}"
+  /bin/tar -zxf "#{node[:jdk][:tmpdir]}/#{node[:jdk][:jdk_file]}"
   EOH
-  not_if { File.exists?(node[:java][:java_home]) }
+  not_if { File.exists?(node[:jdk][:java_home]) }
 end
