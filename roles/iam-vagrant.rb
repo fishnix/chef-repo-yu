@@ -5,7 +5,9 @@ run_list(
   "recipe[java]",
   "recipe[jboss]",
   "recipe[jenkins]",
+  "recipe[mysql::ruby]",
   "recipe[mysql::server]",
+  "recipe[database]",
   "recipe[iam::identityiq]"
 )
 default_attributes(
