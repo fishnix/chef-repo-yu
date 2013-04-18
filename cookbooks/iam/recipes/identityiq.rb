@@ -26,3 +26,10 @@ mysql_database_user node[:iam][:identityiq][:dbuser] do
  database_name  node[:iam][:identityiq][:dbname]
  action [:create, :grant]
 end
+
+maven "identityiq" do
+  group_id node[:iam][:identityiq][:group_id]
+  version node[:iam][:identityiq][:version]
+  dest node[:iam][:identityiq][:deploy_dir]
+  action :put
+end
