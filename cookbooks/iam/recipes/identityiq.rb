@@ -9,8 +9,6 @@
 
 include_recipe "jboss"
 include_recipe "mysql"
-include_recipe "maven"
-
 
 # mysql connection
 mysql_connection_info = { :host => node[:iam][:identityiq][:dbhost], :username => 'root', :password => node[:mysql][:server_root_password] }
@@ -27,11 +25,4 @@ mysql_database_user node[:iam][:identityiq][:dbuser] do
  password       node[:iam][:identityiq][:dbpass]
  database_name  node[:iam][:identityiq][:dbname]
  action [:create, :grant]
-end
-
-maven "identityiq" do
-  group_id node[:iam][:identityiq][:group_id]
-  version node[:iam][:identityiq][:version]
-  dest node[:iam][:identityiq][:deploy_dir]
-  action :put
 end

@@ -1,33 +1,34 @@
 #
-# Author:: Seth Chisamore (<schisamo@opscode.com>)
 # Cookbook Name:: java
 # Recipe:: default
 #
-# Copyright 2008-2011, Opscode, Inc.
+# Copyright 2012, YOUR_COMPANY_NAME
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# All rights reserved - Do Not Redistribute
 #
 
-if node['platform_family'] == "windows"
-  include_recipe "java::windows"
-else
-  include_recipe "java::#{node['java']['install_flavor']}"
+directory node[:java][:tmpdir] do 
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
 end
 
-# Purge the deprecated Sun Java packages if remove_deprecated_packages is true
-%w[sun-java6-jdk sun-java6-bin sun-java6-jre].each do |pkg|
-  package pkg do
-    action :purge
-    only_if { node['java']['remove_deprecated_packages'] }
-  end
+remote_file "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}" do
+  source node[:java][:jdk_url]
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create_if_missing
+  notifies :run, "bash[install_jdk]", :immediately
+end
+
+# Install jdk
+bash "install_jdk" do
+  user "root"
+  cwd "/usr/local"
+  code <<-EOH
+  /bin/tar -zxf "#{node[:java][:tmpdir]}/#{node[:java][:jdk_file]}"
+  EOH
+  not_if { File.exists?(node[:java][:java_home]) }
 end
