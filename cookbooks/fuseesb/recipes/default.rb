@@ -8,7 +8,7 @@
 #
 
 
-include_recipe 'java'
+include_recipe 'jdk'
 
 # add user if doesn't exist already
 user node[:fuseesb][:user] do

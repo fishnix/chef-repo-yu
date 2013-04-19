@@ -20,7 +20,7 @@
 # It should work, but I don't plan on using it anywhere
 #
 
-include_recipe 'java'
+include_recipe 'jdk'
 
 directory node[:jboss][:tmpdir] do 
   owner "root"

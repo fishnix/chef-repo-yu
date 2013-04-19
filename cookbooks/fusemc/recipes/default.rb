@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe 'java'
+include_recipe 'jdk'
 
 # add user if doesn't exist already
 user node[:fusemc][:user] do
