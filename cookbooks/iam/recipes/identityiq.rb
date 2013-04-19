@@ -9,6 +9,8 @@
 
 include_recipe "jboss"
 include_recipe "mysql"
+include_recipe "maven"
+
 
 # mysql connection
 mysql_connection_info = { :host => node[:iam][:identityiq][:dbhost], :username => 'root', :password => node[:mysql][:server_root_password] }

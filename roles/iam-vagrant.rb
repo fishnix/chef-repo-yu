@@ -2,19 +2,21 @@ name "iam-vagrant"
 description "Role to setup an IAM server on vagrant"
 run_list(
   "recipe[misc::hosts]",
-  "recipe[java]",
+  "recipe[jdk]",
   "recipe[jboss]",
   "recipe[jenkins]",
   "recipe[mysql::ruby]",
   "recipe[mysql::server]",
   "recipe[database]",
+  "recipe[maven]",
   "recipe[iam::identityiq]"
 )
 default_attributes(
-  "java" => { "jdk_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jdk1.6.0_25.tar.gz',
+  "jdk" => { "jdk_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jdk1.6.0_25.tar.gz',
               "jdk_file"  => 'jdk1.6.0_25.tar.gz',
               "java_home" => '/usr/local/jdk1.6.0_25'
             },
+  "maven" => { "repositories" => ['https://repository.its.yale.edu/maven2'] },
   "jboss" => {  "jboss_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jboss-eap-5.0.1.tar.gz',
                 "jboss_file"  => 'jboss-eap-5.0.1.tar.gz',
                 "jboss_home"  => '/usr/local/jboss-eap-5.0/jboss-as',
