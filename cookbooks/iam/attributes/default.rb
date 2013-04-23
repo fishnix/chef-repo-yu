@@ -11,3 +11,4 @@ default[:iam][:identityiq][:dbpass] = 'identityiq'
 default[:iam][:radiantone][:user] = "jbossa"
 default[:iam][:radiantone][:rpm_file] = 'radiantone-vds-ics-6.0.2-1.x86_64.rpm'
 default[:iam][:radiantone][:rpm_source] = 'http://localhost/radiantone-vds-ics-6.0.2-1.x86_64.rpm'
+default[:iam][:radiantone][:r_home] = "/usr/local/radiantone"

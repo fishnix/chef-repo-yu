@@ -9,6 +9,7 @@
 
 include_recipe 'jdk'
 
+# Create the tmpdir
 directory node[:iam][:tmpdir] do 
   owner "root"
   group "root"
@@ -16,6 +17,7 @@ directory node[:iam][:tmpdir] do
   action :create
 end
 
+# Pull down rpm package into tmpdir
 remote_file "#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}" do
   source node[:iam][:radiantone][:rpm_source]
   owner "root"
@@ -23,6 +25,22 @@ remote_file "#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}" do
   mode "0644"
   action :create_if_missing
   #notifies :run, "bash[install_jboss]", :immediately
+end
+
+# Install radiantone RPM package, notify chown if we run
+package "radiantone-vds-ics" do
+  source "#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}"
+  only_if { File.exists?("#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}") }
+  notifies :run, "bash[chown_radiantone_home]", :immediately
+end
+
+# Change ownership of radiantone home
+bash "chown_radiantone_home" do
+  user "root"
+  cwd "/usr/local"
+  code <<-EOH
+    chown -Rh "#{node[:iam][:radiantone][:user]}:#{node[:iam][:radiantone][:user]}" "#{node[:iam][:radiantone][:r_home]}"
+  EOH
 end
 
 %w{ glassfish vds vdsControlPanel }.each do |init|
