@@ -8,12 +8,13 @@ run_list(
   "recipe[mysql::ruby]",
   "recipe[mysql::server]",
   "recipe[database]",
-  "recipe[iam::identityiq]"
+  "recipe[iam::identityiq]",
+  "recipe[iam::radiantone]"
 )
 default_attributes(
-  "java" => { "jdk_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jdk1.6.0_25.tar.gz',
-              "jdk_file"  => 'jdk1.6.0_25.tar.gz',
-              "java_home" => '/usr/local/jdk1.6.0_25'
+  "jdk" => { "jdk_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jdk1.6.0_33.tar.gz',
+              "jdk_file"  => 'jdk1.6.0_33.tar.gz',
+              "java_home" => '/usr/local/jdk1.6.0_33'
             },
   "jboss" => {  "jboss_url"   => 'http://leleupi.its.yale.edu:8181/PKG/jboss-eap-5.0.1.tar.gz',
                 "jboss_file"  => 'jboss-eap-5.0.1.tar.gz',

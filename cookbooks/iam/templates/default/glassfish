@@ -1,0 +1,16 @@
+
+APP_NAME="Glassfish Application Server"
+
+# Enable/Disable Glassfish
+ENABLED=1
+
+# Where RadiantOne is installed
+RLI_HOME="/usr/local/radiantone"
+
+# User to run as
+RLI_USER=<%= node[:iam][:radiantone][:user] %>
+
+# Start/stop/status commands
+START_CMD="${RLI_HOME}/bin/start_glassfish.sh"
+STOP_CMD="${RLI_HOME}/bin/stop_glassfish.sh"
+

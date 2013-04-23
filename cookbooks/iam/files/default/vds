@@ -1,0 +1,60 @@
+#! /bin/bash
+#
+# chkconfig: 35 98 55
+# description: Starts / stops VDS Server
+#
+
+# location of sysconfig file
+[ -L $0 ] && SYSCONFIG="/etc/sysconfig/$(basename $(readlink $0))" || SYSCONFIG="/etc/sysconfig/$(basename $0)"
+
+### Exit if sysconfig doesn't exist
+if [ ! -r ${SYSCONFIG} ]; then
+  echo "sysconfig: ${SYSCONFIG} not readable"
+  exit 1
+fi
+
+### Read configuration
+[ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
+
+
+
+start() {
+  echo "Starting ${APP_NAME} ..."
+  /bin/su - "$RLI_USER" -c "RLI_JAVA_HOME=\"${RLI_HOME}/jdk\" RLI_HOME=\"${RLI_HOME}\" VDS_JAVA_HOME=\"${RLI_HOME}/jdk\" VDS_HOME=\"${RLI_HOME}\" bash \"${START_CMD}\""
+  return $?
+}
+
+stop() {
+  echo "Stopping ${APP_NAME} ..."
+  /bin/su - "$RLI_USER" -c "RLI_JAVA_HOME=\"${RLI_HOME}/jdk\" RLI_HOME=\"${RLI_HOME}\" VDS_JAVA_HOME=\"${RLI_HOME}/jdk\" VDS_HOME=\"${RLI_HOME}\" bash \"${STOP_CMD}\""
+  return $?
+}
+
+status() {
+  echo "Status of ${APP_NAME} ..."
+  /bin/su - "$RLI_USER" -c "RLI_JAVA_HOME=\"${RLI_HOME}/jdk\" RLI_HOME=\"${RLI_HOME}\" VDS_JAVA_HOME=\"${RLI_HOME}/jdk\" VDS_HOME=\"${RLI_HOME}\" bash \"${STATUS_CMD}\""
+  return $?
+}
+
+
+case "$1" in
+  start)
+    start || exit $?
+    ;;
+  stop)
+    stop || exit $?
+    ;;
+  status)
+    status || exit $?
+    ;;
+  restart)
+    stop && start
+    [ $? -eq 0 ] || exit 1
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart}"
+    exit 1
+esac
+
+exit 0
+

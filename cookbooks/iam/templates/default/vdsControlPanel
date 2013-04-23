@@ -1,0 +1,13 @@
+
+APP_NAME="VDS Control Panel"
+
+# Where RadiantOne is installed
+RLI_HOME="/usr/local/radiantone"
+
+# User to run as
+RLI_USER=<%= node[:iam][:radiantone][:user] %>
+
+# Start/stop/status commands
+START_CMD="${RLI_HOME}/bin/launchControlPanel.sh"
+STOP_CMD="${RLI_HOME}/bin/stopWebAppServer.sh"
+
