@@ -16,7 +16,7 @@ directory node[:iam][:tmpdir] do
   action :create
 end
 
-remote_file "#{node[:iam][:radiantone][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}" do
+remote_file "#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}" do
   source node[:iam][:radiantone][:rpm_source]
   owner "root"
   group "root"
