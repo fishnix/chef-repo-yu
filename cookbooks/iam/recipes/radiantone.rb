@@ -9,6 +9,13 @@
 
 include_recipe 'jdk'
 
+# required for Context builder
+%w{ gtk2 xorg-x11-xauth dejavu-lgc-sans-fonts dos2unix }.each do |pkg|
+  package pkg do
+    action [:install,:upgrade]
+  end
+end
+
 # Create the tmpdir
 directory node[:iam][:tmpdir] do 
   owner "root"
