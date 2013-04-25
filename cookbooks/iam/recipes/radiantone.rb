@@ -31,7 +31,6 @@ remote_file "#{node[:iam][:tmpdir]}/#{node[:iam][:radiantone][:rpm_file]}" do
   group "root"
   mode "0644"
   action :create_if_missing
-  #notifies :run, "bash[install_jboss]", :immediately
 end
 
 # Install radiantone RPM package, notify chown if we run
@@ -48,6 +47,7 @@ bash "chown_radiantone_home" do
   code <<-EOH
     chown -Rh "#{node[:iam][:radiantone][:user]}:#{node[:iam][:radiantone][:user]}" "#{node[:iam][:radiantone][:r_home]}"
   EOH
+  action :nothing
 end
 
 %w{ glassfish vds vdsControlPanel }.each do |init|
@@ -62,7 +62,7 @@ end
 
 %w{ glassfish vds vdsControlPanel }.each do |sysconfig|
 	template "/etc/sysconfig/#{sysconfig}" do
-		source sysconfig
+		source "#{sysconfig}.erb"
     owner "root"
     group "root"
     mode "0644"

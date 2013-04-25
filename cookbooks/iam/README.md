@@ -1,24 +1,28 @@
 iam Cookbook
 ============
-TODO: Enter the cookbook description here.
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+This cookbooks provides recipes to install and configure the two IAM projects currently in flight:  IdentityIQ and RadiantOne VDS.
+
+These should *probably* be split into separate cookbooks, at which time this will simply become a wrapper.
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
-#### packages
-- `toaster` - iam needs toaster to brown your bagel.
+#### platform  
+- currently only tested on `RHEL` flavored linux
+
+#### cookbooks
+- `jdk` - a home grown jdk cookbook, not fully removed
+- `jboss` - installed and configures jboss, where identityiq runs
+- `maven` - pulls identityiq out of our maven repo
+- `mysql` - installs and configures mysql server for identityiq
+
 
 Attributes
 ----------
 TODO: List you cookbook attributes here.
 
-e.g.
-#### iam::default
+#### iam::identityiq
 <table>
   <tr>
     <th>Key</th>
@@ -27,16 +31,32 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['iam']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['iam']['identityiq']</tt></td>
+    <td>Type</td>
+    <td>Description</td>
+    <td><tt>default</tt></td>
+  </tr>
+</table>
+
+#### iam::radiantone
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>['iam']['radiantone']</tt></td>
+    <td>Type</td>
+    <td>Description</td>
+    <td><tt>default</tt></td>
   </tr>
 </table>
 
 Usage
 -----
-#### iam::default
+#### iam::radiantone
 TODO: Write usage instructions for each cookbook.
 
 e.g.
@@ -65,4 +85,4 @@ e.g.
 
 License and Authors
 -------------------
-Authors: TODO: List authors
+Authors: E Camden Fisher <camden.fisher@yale.edu>

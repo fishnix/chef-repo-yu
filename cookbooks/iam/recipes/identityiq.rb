@@ -35,10 +35,40 @@ mysql_database_user node[:iam][:identityiq][:dbuser] do
  action [:create, :grant]
 end
 
+iiqwar = "#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war"
+directory iiqwar do
+	owner node[:jboss][:nodes][:node00][:user]
+	group node[:jboss][:nodes][:node00][:user]
+	mode 00755
+	recursive true
+	action :create
+end
+
+# fetch the identityiq war file from maven repo
 maven "identityiq" do
   group_id "identityiq"
   version "6.0.5"
   dest "/vagrant/src"
   packaging "war"
   action :put
+  notifies :run, "bash[extract_iiq_war]", :immediately
 end
+
+# Extract the identityiq war fetched by maven
+bash "extract_iiq_war" do
+  user node[:jboss][:nodes][:node00][:user]
+  cwd "#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war"
+  code <<-EOH
+    #{node[:jdk][:java_home]}/bin/jar xf /vagrant/src/identityiq.war
+  EOH
+  only_if { File.exists?("#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war") }
+end
+
+template "#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war/WEB-INF/classes/iiq.properties" do
+	source "iiq.properties.erb"
+	owner node[:jboss][:nodes][:node00][:user]
+	group node[:jboss][:nodes][:node00][:user]
+	mode 00644
+	only_if { File.exists?("#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war") }
+end
+
