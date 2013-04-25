@@ -48,7 +48,7 @@ end
 maven "identityiq" do
   group_id "identityiq"
   version "6.0.5"
-  dest "/vagrant/src"
+  dest node[:iam][:tmpdir]
   packaging "war"
   action :put
   notifies :run, "bash[extract_iiq_war]", :immediately
@@ -59,7 +59,7 @@ bash "extract_iiq_war" do
   user node[:jboss][:nodes][:node00][:user]
   cwd "#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war"
   code <<-EOH
-    #{node[:jdk][:java_home]}/bin/jar xf /vagrant/src/identityiq.war
+    #{node[:jdk][:java_home]}/bin/jar xf #{node[:iam][:tmpdir]}/identityiq.war
   EOH
   only_if { File.exists?("#{node[:jboss][:jboss_apps]}/node00/webapps/identityiq.war") }
 end
