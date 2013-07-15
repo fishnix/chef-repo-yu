@@ -8,6 +8,8 @@
 #
 
 include_recipe 'jdk'
+include_recipe 'karaf'
+
 
 # add user if doesn't exist already
 user node[:fusemc][:user] do
@@ -48,19 +50,46 @@ link node[:fusemc][:home] do
   only_if { File.exists?(node[:fusemc][:install]) }
 end
 
+template "#{node[:fusemc][:install]}/etc/users.properties" do
+  source "users.properties.erb"
+  owner node[:fusemc][:user]
+  group node[:fusemc][:user]
+  mode 00644
+end
 
-## sysconfig
-#template "/etc/sysconfig/fuse-mc" do
-#    source "fuse-mc_sysconfig.erb"
-#    owner "root"
-#    group "root"
-#    mode "0444"
-#end
-#
-## init script
-#template "/etc/init.d/fuse-esb" do
-#    source "fuse-esb_init.erb"
-#    owner "root"
-#    group "root"
-#    mode "0555"
-#end
+# init script
+template "/etc/init.d/fuse-mc" do
+   source "fuse-mc_init.erb"
+   owner "root"
+   group "root"
+   mode "0555"
+end
+
+# sysconfig
+template "/etc/sysconfig/fuse-mc" do
+   source "fuse-mc_sysconfig.erb"
+   owner "root"
+   group "root"
+   mode "0444"
+end
+
+service 'fuse-mc' do
+  action [:enable, :start]
+end
+
+if node[:fusemc][:fabric][:local_resolver] == "manualip"
+  karaf_cmd "create_fabric" do 
+    manual_ip node[:fusemc][:fabric][:manual_ip]
+    local_resolver node[:fusemc][:fabric][:local_resolver]
+    global_resolver node[:fusemc][:fabric][:global_resolver]
+    action :create_fabric
+  end
+else
+  karaf_cmd "create_fabric" do 
+    action :create_fabric
+  end
+end
+
+karaf_cmd "enable_management_console" do 
+  action :enable_mc
+end

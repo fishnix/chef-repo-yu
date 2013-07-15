@@ -1,0 +1,13 @@
+# User which runs Apache ServiceMix
+KARAF_USER="<%= node[:amq][:user] %>"
+
+# Where Apache ServiceMix lives
+KARAF_HOME="<%= node[:amq][:home] %>"
+
+# Where JVM is installed
+JAVA_HOME="<%= node[:jdk][:java_home] %>"
+
+# Memory settings for JVM
+MAXPERM="<%= node[:amq][:maxperm] %>"
+MAXHEAP="<%= node[:amq][:maxheap] %>"
+MINHEAP="<%= node[:amq][:minheap] %>"

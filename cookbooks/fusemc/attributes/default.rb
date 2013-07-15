@@ -9,3 +9,6 @@ default[:fusemc][:home]      = "/usr/local/fuse-mc"
 default[:fusemc][:maxperm] = "128m"
 default[:fusemc][:maxheap] = "1024m"
 default[:fusemc][:minheap] = "128m"
+
+default[:fusemc][:fabric][:local_resolver] = 'localhostname'
+default[:fusemc][:fabric][:global_resolver] = 'localhostname'
