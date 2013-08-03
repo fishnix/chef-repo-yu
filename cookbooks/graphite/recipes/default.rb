@@ -2,23 +2,26 @@
 # Cookbook Name:: graphite
 # Recipe:: default
 #
-# Copyright 2011, Heavy Water Software Inc.
+# Copyright 2013, YOUR_COMPANY_NAME
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# All rights reserved - Do Not Redistribute
 #
 
-include_recipe "python"
+# Install deps
+%w{ pycairo pycairo-devel Django14 django-tagging python-django-tagging python-twisted python-zope-interface4 mod_python mod_wsgi python-memcached }.each do |p|
+ 	package p do
+ 		action [:install, :upgrade]
+	end
+end
 
-include_recipe "graphite::whisper"
-include_recipe "graphite::carbon"
-include_recipe "graphite::web"
+# install graphite
+bash "install_graphite" do
+	action :run
+	user "root"
+	cwd "/tmp"
+	code <<-EOH
+	/usr/bin/python-pip install whisper
+	/usr/bin/python-pip install carbon
+	/usr/bin/python-pip install graphite-web
+	EOH
+end

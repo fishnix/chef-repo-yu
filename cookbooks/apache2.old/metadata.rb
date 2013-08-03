@@ -1,4 +1,3 @@
-name			 "apache2"
 maintainer       "E Camden Fisher"
 maintainer_email "fish@fishnix.net"
 license          "Apache 2.0"

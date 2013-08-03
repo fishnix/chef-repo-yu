@@ -1,0 +1,9 @@
+#
+# Sysconfig for memcached
+#   managed by Chef
+# 
+PORT="<%= node[:memcached][:port] %>"
+USER="<%= node[:memcached][:user] %>"
+MAXCONN="<%= node[:memcached][:maxconn] %>"
+CACHESIZE="<%= node[:memcached][:cachesize] %>"
+OPTIONS="-P <%= node[:memcached][:pidfile] %>"

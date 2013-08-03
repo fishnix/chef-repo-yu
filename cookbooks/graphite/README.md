@@ -1,32 +1,68 @@
-Description
-===========
+graphite Cookbook
+=================
+TODO: Enter the cookbook description here.
 
-Installs and configures Graphite http://graphite.wikidot.com/
+e.g.
+This cookbook makes your favorite breakfast sandwhich.
 
 Requirements
-============
+------------
+TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-* Ubuntu 10.04 (Lucid) - with default settings
-* Ubuntu 11.10 (Oneiric) - change node[:graphite][:python_version] to "2.7"
+e.g.
+#### packages
+- `toaster` - graphite needs toaster to brown your bagel.
 
 Attributes
-==========
+----------
+TODO: List you cookbook attributes here.
 
-* `node[:graphite][:password]` sets the default password for graphite "root" user.
+e.g.
+#### graphite::default
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>['graphite']['bacon']</tt></td>
+    <td>Boolean</td>
+    <td>whether to include bacon</td>
+    <td><tt>true</tt></td>
+  </tr>
+</table>
 
 Usage
-=====
+-----
+#### graphite::default
+TODO: Write usage instructions for each cookbook.
 
-`recipe[graphite]` should build a stand-alone Graphite installation.
+e.g.
+Just include `graphite` in your node's `run_list`:
 
-`recipe[graphite::ganglia]` integrates with Ganglia. You'll want at
-least one monitor node (i.e. recipe[ganglia]) node to be running
-to use it.
+```json
+{
+  "name":"my_node",
+  "run_list": [
+    "recipe[graphite]"
+  ]
+}
+```
 
-Caveats
-=======
+Contributing
+------------
+TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
 
-Ships with two default schemas, stats.* (for Etsy's statsd) and a
-catchall that matches anything. The catchall retains minutely data for
-13 months, as in the default config. stats retains data every 10 seconds
-for 6 hours, every minute for a week, and every 10 minutes for 5 years.
+e.g.
+1. Fork the repository on Github
+2. Create a named feature branch (like `add_component_x`)
+3. Write you change
+4. Write tests for your change (if applicable)
+5. Run the tests, ensuring they all pass
+6. Submit a Pull Request using Github
+
+License and Authors
+-------------------
+Authors: TODO: List authors

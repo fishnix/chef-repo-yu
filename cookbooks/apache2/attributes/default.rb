@@ -24,74 +24,77 @@
 # Where the various parts of apache are
 case platform
   when "redhat","centos","fedora","suse"
-    set[:apache][:dir]        = "/etc/httpd"
-    set[:apache][:log_dir]    = "/var/log/httpd"
-    set[:apache][:user]       = "apache"
-    set[:apache][:binary]     = "/usr/sbin/httpd"
-    set[:apache][:icondir]    = "/var/www/icons/"
-    set[:apache][:cache_dir]  = "/var/cache/httpd"
-    set[:apache][:pidfile]    = "/var/run/httpd.pid"
+    default[:apache2][:dir]        = "/etc/httpd"
+    default[:apache2][:log_dir]    = "/var/log/httpd"
+    default[:apache2][:user]       = "apache"
+    default[:apache2][:binary]     = "/usr/sbin/httpd"
+    default[:apache2][:icondir]    = "/var/www/icons/"
+    default[:apache2][:cache_dir]  = "/var/cache/httpd"
+    default[:apache2][:pidfile]    = "/var/run/httpd/httpd.pid"
   when "debian","ubuntu"
-    set[:apache][:dir]        = "/etc/apache2"
-    set[:apache][:log_dir]    = "/var/log/apache2"
-    set[:apache][:user]       = "www-data"
-    set[:apache][:binary]     = "/usr/sbin/apache2"
-    set[:apache][:icondir]    = "/usr/share/apache2/icons"
-    set[:apache][:cache_dir]  = "/var/cache/apache2"
-    set[:apache][:pidfile]    = "/var/run/apache2.pid"
+    default[:apache2][:dir]        = "/etc/apache2"
+    default[:apache2][:log_dir]    = "/var/log/apache2"
+    default[:apache2][:user]       = "www-data"
+    default[:apache2][:binary]     = "/usr/sbin/apache2"
+    default[:apache2][:icondir]    = "/usr/share/apache2/icons"
+    default[:apache2][:cache_dir]  = "/var/cache/apache2"
+    default[:apache2][:pidfile]    = "/var/run/apache2.pid"
   when "arch"
-    set[:apache][:dir]        = "/etc/httpd"
-    set[:apache][:log_dir]    = "/var/log/httpd"
-    set[:apache][:user]       = "http"
-    set[:apache][:binary]     = "/usr/sbin/httpd"
-    set[:apache][:icondir]    = "/usr/share/httpd/icons"
-    set[:apache][:cache_dir]  = "/var/cache/httpd"
-    set[:apache][:pidfile]    ="/var/run/httpd/httpd.pid"
+    default[:apache2][:dir]        = "/etc/httpd"
+    default[:apache2][:log_dir]    = "/var/log/httpd"
+    default[:apache2][:user]       = "http"
+    default[:apache2][:binary]     = "/usr/sbin/httpd"
+    default[:apache2][:icondir]    = "/usr/share/httpd/icons"
+    default[:apache2][:cache_dir]  = "/var/cache/httpd"
+    default[:apache2][:pidfile]    ="/var/run/httpd/httpd.pid"
   else
-    set[:apache][:dir]        = "/etc/apache2"
-    set[:apache][:log_dir]    = "/var/log/apache2"
-    set[:apache][:user]       = "www-data"
-    set[:apache][:binary]     = "/usr/sbin/apache2"
-    set[:apache][:icondir]    = "/usr/share/apache2/icons"
-    set[:apache][:cache_dir]  = "/var/cache/apache2"
-    set[:apache][:pidfile]    = "logs/httpd.pid"
+    default[:apache2][:dir]        = "/etc/apache2"
+    default[:apache2][:log_dir]    = "/var/log/apache2"
+    default[:apache2][:user]       = "www-data"
+    default[:apache2][:binary]     = "/usr/sbin/apache2"
+    default[:apache2][:icondir]    = "/usr/share/apache2/icons"
+    default[:apache2][:cache_dir]  = "/var/cache/apache2"
+    default[:apache2][:pidfile]    = "logs/httpd.pid"
 end
 
-###
-# These settings need the unless, since we want them to be tunable,
-# and we don't want to override the tunings.
-###
-
 # General settings
-default[:apache][:listen_ports] = [ "80" ]
-default[:apache][:ssl_ports] = [ "443" ]
-default[:apache][:contact] = "root"
-default[:apache][:timeout] = 300
-default[:apache][:keepalive] = "On"
-default[:apache][:keepaliverequests] = 100
-default[:apache][:keepalivetimeout] = 5
-default[:apache][:namevhost] = "On"
-default[:apache][:namevhosts] = [ "127.0.0.1:80", "*:80" ]
+default[:apache2][:listen_ports] = [ "80" ]
+default[:apache2][:contact] = "root"
+default[:apache2][:timeout] = 300
+default[:apache2][:keepalive] = "On"
+default[:apache2][:keepaliverequests] = 100
+default[:apache2][:keepalivetimeout] = 5
+default[:apache2][:namevhost] = "On"
+default[:apache2][:namevhosts] = [ "127.0.0.1:80", "*:80" ]
 
 # Security
-default[:apache][:servertokens] = "Prod"
-default[:apache][:serversignature] = "On"
-default[:apache][:traceenable] = "On"
-default[:apache][:serverstatus] = "On"
-default[:apache][:serverinfo] = "Off"
+default[:apache2][:servertokens] = "Prod"
+default[:apache2][:serversignature] = "On"
+default[:apache2][:traceenable] = "Off"
+default[:apache2][:serverstatus] = "On"
+default[:apache2][:serverinfo] = "Off"
 
 # Prefork Attributes
-default[:apache][:prefork][:startservers] = 5
-default[:apache][:prefork][:minspareservers] = 5
-default[:apache][:prefork][:maxspareservers] = 10
-default[:apache][:prefork][:serverlimit] = 20
-default[:apache][:prefork][:maxclients] = 20
-default[:apache][:prefork][:maxrequestsperchild] = 10000
+default[:apache2][:prefork][:startservers] = 5
+default[:apache2][:prefork][:minspareservers] = 5
+default[:apache2][:prefork][:maxspareservers] = 10
+default[:apache2][:prefork][:serverlimit] = 20
+default[:apache2][:prefork][:maxclients] = 20
+default[:apache2][:prefork][:maxrequestsperchild] = 10000
 
 # Worker Attributes
-default[:apache][:worker][:startservers] = 4
-default[:apache][:worker][:maxclients] = 1024
-default[:apache][:worker][:minsparethreads] = 64
-default[:apache][:worker][:maxsparethreads] = 192
-default[:apache][:worker][:threadsperchild] = 64
-default[:apache][:worker][:maxrequestsperchild] = 0
+default[:apache2][:worker][:startservers] = 4
+default[:apache2][:worker][:maxclients] = 1024
+default[:apache2][:worker][:minsparethreads] = 64
+default[:apache2][:worker][:maxsparethreads] = 192
+default[:apache2][:worker][:threadsperchild] = 64
+default[:apache2][:worker][:maxrequestsperchild] = 0
+
+# SSL Atributes
+default[:apache2][:ssl][:listen_ports] = [ "443" ]
+default[:apache2][:ssl][:SSLPassPhraseDialog] = 'exec:/root/.https_pass'
+default[:apache2][:ssl][:DocumentRoot] = '/var/www/vhost/www.thebudgetbabe.com'
+default[:apache2][:ssl][:ServerName] = 'www.thebudgetbabe.com:443'
+default[:apache2][:ssl][:ServerAlias] = [ 'thebudgetbabe.com:443' ]
+
+

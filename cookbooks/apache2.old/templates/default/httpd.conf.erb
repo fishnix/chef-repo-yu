@@ -15,7 +15,7 @@
 # Don't give away too much information about all the subcomponents
 # we are running.  Comment out this line if you don't mind remote sites
 # finding out what major optional modules you are running
-ServerTokens <%= node[:apache2][:servertokens] %> 
+ServerTokens <%= node[:apache][:servertokens] %> 
 
 #
 # ServerRoot: The top of the directory tree under which the server's
@@ -28,37 +28,37 @@ ServerTokens <%= node[:apache2][:servertokens] %>
 #
 # Do NOT add a slash at the end of the directory path.
 #
-ServerRoot "<%= node[:apache2][:dir] %>"
+ServerRoot "<%= node[:apache][:dir] %>"
 
 #
 # PidFile: The file in which the server should record its process
 # identification number when it starts.
 #
-PidFile <%= node[:apache2][:pidfile] %>
+PidFile <%= node[:apache][:pidfile] %>
 
 #
 # Timeout: The number of seconds before receives and sends time out.
 #
-Timeout <%= node[:apache2][:timeout] %>
+Timeout <%= node[:apache][:timeout] %>
 
 #
 # KeepAlive: Whether or not to allow persistent connections (more than
 # one request per connection). Set to "Off" to deactivate.
 #
-KeepAlive <%= node[:apache2][:keepalive] %>
+KeepAlive <%= node[:apache][:keepalive] %>
 
 #
 # MaxKeepAliveRequests: The maximum number of requests to allow
 # during a persistent connection. Set to 0 to allow an unlimited amount.
 # We recommend you leave this number high, for maximum performance.
 #
-MaxKeepAliveRequests <%= node[:apache2][:keepaliverequests] %>
+MaxKeepAliveRequests <%= node[:apache][:keepaliverequests] %>
 
 #
 # KeepAliveTimeout: Number of seconds to wait for the next request from the
 # same client on the same connection.
 #
-KeepAliveTimeout <%= node[:apache2][:keepalivetimeout] %>
+KeepAliveTimeout <%= node[:apache][:keepalivetimeout] %>
 
 ##
 ## Server-Pool Size Regulation (MPM specific)
@@ -72,12 +72,12 @@ KeepAliveTimeout <%= node[:apache2][:keepalivetimeout] %>
 # MaxClients: maximum number of server processes allowed to start
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule prefork.c>
-    StartServers          <%= node[:apache2][:prefork][:startservers] %>
-    MinSpareServers       <%= node[:apache2][:prefork][:minspareservers] %>
-    MaxSpareServers       <%= node[:apache2][:prefork][:maxspareservers] %>
-    ServerLimit           <%= node[:apache2][:prefork][:serverlimit] %>
-    MaxClients            <%= node[:apache2][:prefork][:maxclients] %>
-    MaxRequestsPerChild   <%= node[:apache2][:prefork][:maxrequestsperchild] %>
+    StartServers          <%= node[:apache][:prefork][:startservers] %>
+    MinSpareServers       <%= node[:apache][:prefork][:minspareservers] %>
+    MaxSpareServers       <%= node[:apache][:prefork][:maxspareservers] %>
+    ServerLimit           <%= node[:apache][:prefork][:serverlimit] %>
+    MaxClients            <%= node[:apache][:prefork][:maxclients] %>
+    MaxRequestsPerChild   <%= node[:apache][:prefork][:maxrequestsperchild] %>
 </IfModule>
 
 # worker MPM
@@ -88,12 +88,12 @@ KeepAliveTimeout <%= node[:apache2][:keepalivetimeout] %>
 # ThreadsPerChild: constant number of worker threads in each server process
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule worker.c>
-    StartServers          <%= node[:apache2][:worker][:startservers] %>
-    MaxClients            <%= node[:apache2][:worker][:maxclients] %>
-    MinSpareThreads       <%= node[:apache2][:worker][:minsparethreads] %>
-    MaxSpareThreads       <%= node[:apache2][:worker][:maxsparethreads] %>
-    ThreadsPerChild       <%= node[:apache2][:worker][:threadsperchild] %>
-    MaxRequestsPerChild   <%= node[:apache2][:worker][:maxrequestsperchild] %>
+    StartServers          <%= node[:apache][:worker][:startservers] %>
+    MaxClients            <%= node[:apache][:worker][:maxclients] %>
+    MinSpareThreads       <%= node[:apache][:worker][:minsparethreads] %>
+    MaxSpareThreads       <%= node[:apache][:worker][:maxsparethreads] %>
+    ThreadsPerChild       <%= node[:apache][:worker][:threadsperchild] %>
+    MaxRequestsPerChild   <%= node[:apache][:worker][:maxrequestsperchild] %>
 </IfModule>
 
 #
@@ -104,16 +104,15 @@ KeepAliveTimeout <%= node[:apache2][:keepalivetimeout] %>
 # Change this to Listen on specific IP addresses as shown below to 
 # prevent Apache from glomming onto all bound IP addresses (0.0.0.0)
 #
-<% node[:apache2][:listen_ports].each do |p| -%>
-Listen <%= p %>
-<% end -%>
+#Listen 12.34.56.78:80
+Listen 80
 
-Include <%= node[:apache2][:dir] %>/conf/modules.conf
+Include <%= node[:apache][:dir] %>/conf/modules.conf
 
 #
 # Load config files from the config directory "/etc/httpd/conf.d".
 #
-Include <%= node[:apache2][:dir] %>/conf.d/
+Include <%= node[:apache][:dir] %>/conf.d/
 
 #
 # ExtendedStatus controls whether Apache will generate "full" status
@@ -124,7 +123,7 @@ ExtendedStatus On
 
 # Disable TRACE
 #
-TraceEnable <%= node[:apache2][:traceenable] %> 
+TraceEnable <%= node[:apache][:traceenable] %> 
 
 #
 # If you wish httpd to run as a different user or group, you must run
@@ -138,8 +137,8 @@ TraceEnable <%= node[:apache2][:traceenable] %>
 #  when the value of (unsigned)Group is above 60000; 
 #  don't use Group #-1 on these systems!
 #
-User <%= node[:apache2][:user] %>
-Group <%= node[:apache2][:user] %>
+User <%= node[:apache][:user] %>
+Group <%= node[:apache][:user] %>
 
 ### Section 2: 'Main' server configuration
 #
@@ -173,8 +172,7 @@ ServerAdmin root@fishnix.com
 # redirections work in a sensible way.
 #
 #ServerName www.example.com:80
-#ServerName www.fishnix.net:80
-ServerName <%= node[:fqdn] %>
+ServerName www.fishnix.net:80
 
 #
 # UseCanonicalName: Determines how Apache constructs self-referencing 
@@ -301,7 +299,7 @@ HostnameLookups Off
 # logged here.  If you *do* define an error logfile for a <VirtualHost>
 # container, that host's errors will be logged there and not here.
 #
-ErrorLog <%= node[:apache2][:log_dir] %>/error.log 
+ErrorLog <%= node[:apache][:log_dir] %>/error.log 
 
 #
 # LogLevel: Control the number of messages logged to the error_log.
@@ -322,9 +320,6 @@ LogFormat "%{User-agent}i" agent
 # "combinedio" includes actual counts of actual bytes received (%I) and sent (%O); this
 # requires the mod_logio module to be loaded.
 #LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
-
-LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" proxy
-SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
 
 #
 # The location and format of the access logfile (Common Logfile Format).
@@ -356,7 +351,7 @@ CustomLog logs/access_log combined
 # Set to "EMail" to also include a mailto: link to the ServerAdmin.
 # Set to one of:  On | Off | EMail
 #
-ServerSignature <%= node[:apache2][:serversignature] %> 
+ServerSignature <%= node[:apache][:serversignature] %> 
 
 #
 # Aliases: Add here as many aliases as you need (with no limit). The format is 
@@ -688,7 +683,7 @@ BrowserMatch "^gnome-vfs/1.0" redirect-carefully
 BrowserMatch "^XML Spy" redirect-carefully
 BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 
-<% if node[:apache2][:serverstatus] == "On" -%>
+<% if node[:apache][:serverstatus] == "On" -%>
 #
 # Allow server status reports generated by mod_status,
 # with the URL of http://servername/server-status
@@ -702,7 +697,7 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 </Location>
 <% end -%>
 
-<% if node[:apache2][:serverstatus] == "On" -%>
+<% if node[:apache][:serverstatus] == "On" -%>
 #
 # Allow remote server configuration reports, with the URL of
 #  http://servername/server-info (requires that mod_info.c be loaded).
@@ -719,30 +714,15 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 
 ### Section 3: Virtual Hosts
 
-<% if node[:apache2][:namevhost] == "On" -%>
+<% if node[:apache][:namevhost] == "On" -%>
 #
 # Use name-based virtual hosting.
 #
-<% node[:apache2][:namevhosts].each do |v| -%>
+<% node[:apache][:namevhosts].each do |v| -%>
 NameVirtualHost <%= v %>
 <% end -%>
 <% end -%>
 
 ##### LOCALHOST ######
-<% node[:apache2][:listen_ports].each do |p| -%>
-<VirtualHost 127.0.0.1:<%= p %>>
-        ServerName 127.0.0.1
-        DocumentRoot "/var/www/html"
-
-        <Directory "/var/www/html">
-                AllowOverride None
-                Options FollowSymLinks
-                Order allow,deny
-                Allow from all
-        </Directory>
+<VirtualHost 127.0.0.1:80>
 </VirtualHost>
-<% end -%>
-
-
-
-

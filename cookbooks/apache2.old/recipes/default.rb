@@ -63,34 +63,44 @@ end
 
 # Cleanup some stuff we don't want
 %w{ proxy_ajp.conf README welcome.conf }.each do |rm|
-  file "#{node[:apache2][:dir]}/conf.d/#{rm}" do
+  file "#{node[:apache][:dir]}/conf.d/#{rm}" do
     action :delete
     backup false
   end
 end
 
-# Create log dir
-directory node[:apache2][:log_dir] do
+directory node[:apache][:log_dir] do
   mode 0755
   action :create
 end
 
-# Create misc config dirs
-%w{ ssl conf conf.d }.each do |dir|
-  directory "#{node[:apache2][:dir]}/#{dir}" do
-    action :create
-    mode 0755
-    owner "root"
-    group "root"
-  end
+directory "#{node[:apache][:dir]}/ssl" do
+  action :create
+  mode 0755
+  owner "root"
+  group "root"
+end
+
+directory "#{node[:apache][:dir]}/conf" do
+  action :create
+  mode 0755
+  owner "root"
+  group "root"
+end
+
+directory "#{node[:apache][:dir]}/conf.d" do
+  action :create
+  mode 0755
+  owner "root"
+  group "root"
 end
 
 template "httpd.conf" do
   case node[:platform]
   when "centos","redhat","fedora","arch"
-    path "#{node[:apache2][:dir]}/conf/httpd.conf"
+    path "#{node[:apache][:dir]}/conf/httpd.conf"
   when "debian","ubuntu"
-    path "#{node[:apache2][:dir]}/apache2.conf"
+    path "#{node[:apache][:dir]}/apache2.conf"
   end
   source "httpd.conf.erb"
   owner "root"
@@ -100,7 +110,7 @@ template "httpd.conf" do
 end
 
 template "modules.conf" do
-  path "#{node[:apache2][:dir]}/conf/modules.conf"
+  path "#{node[:apache][:dir]}/conf/modules.conf"
   source "modules.conf.erb"
   owner "root"
   group "root"
