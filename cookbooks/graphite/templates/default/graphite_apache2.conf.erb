@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+	ServerName graphite.example.com
+	ServerAdmin graphite@example.com
+
+	DocumentRoot <%= node[:graphite][:home] %>/conf
+	WSGIScriptAlias / <%= node[:graphite][:home] %>/conf/graphite.wsgi
+
+	<Directory <%= node[:graphite][:home] %>/webapp>
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+</VirtualHost>
