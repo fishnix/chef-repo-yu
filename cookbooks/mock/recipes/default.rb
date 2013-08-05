@@ -29,7 +29,7 @@ end
 	end
 end
 
-template "/etc/skep/.rpmmacros" do
+template "/etc/skel/.rpmmacros" do
 	source "skel_rpmmacros.erb"
 	owner "root"
 	group "root"
