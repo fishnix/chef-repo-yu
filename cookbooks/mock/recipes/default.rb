@@ -9,10 +9,7 @@
 
 
 # Create skel dirs
-
-skel_base = "/etc/skell/packages/buildroot.clean"
-
-directory skel_base do
+directory "/etc/skel/packages/buildroot.clean" do
 	recursive true
 	action :create
 	owner "root"
@@ -21,7 +18,7 @@ directory skel_base do
 end
 
 %w{ RPMS SRPMS SPECS BUILD SOURCES }.each do |d|
-	directory "#{skel_base}/#{d}" do
+	directory "/etc/skel/packages/buildroot.clean/#{d}" do
 		action :create
 		owner "root"
 		group "root"
