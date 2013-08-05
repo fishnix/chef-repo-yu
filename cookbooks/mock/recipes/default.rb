@@ -12,7 +12,7 @@
 
 skel_base = "/etc/skell/packages/buildroot.clean"
 
-directory skel_base
+directory skel_base do
 	recursive true
 	action :create
 	owner "root"
@@ -21,7 +21,7 @@ directory skel_base
 end
 
 %w{ RPMS SRPMS SPECS BUILD SOURCES }.each do |d|
-	directory "#{skel_base}/#{d}"
+	directory "#{skel_base}/#{d}" do
 		action :create
 		owner "root"
 		group "root"
@@ -29,7 +29,7 @@ end
 	end
 end
 
-template "/etc/skep/.rpmmacros"
+template "/etc/skep/.rpmmacros" do
 	source "skel_rpmmacros.erb"
 	owner "root"
 	group "root"
