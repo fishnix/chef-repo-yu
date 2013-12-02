@@ -1,0 +1,1 @@
+default[:yum][:satellite][:certurl] = "http://vm-satprdapp-01.its.yale.edu/pub/RHN-ORG-TRUSTED-SSL-CERT"
