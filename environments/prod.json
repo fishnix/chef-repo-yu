@@ -1,0 +1,50 @@
+{
+  "name": "prod",
+  "description": "",
+  "cookbook_versions": {
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+    "apache2": {
+      "timeout": "20",
+      "keepalive": "On",
+      "keepaliverequests": "100",
+      "keepalivetimeout": "2",
+      "serversignature": "off",
+      "prefork": {
+        "startservers": "15",
+        "minspareservers": "5",
+        "maxspareservers": "10",
+        "serverlimit": "65",
+        "maxclients": "60",
+        "maxrequestsperchild": "1000"
+      },
+      "namevhost": "On",
+      "namevhosts": [
+        "*:80"      ]
+    },
+    "mysql": {
+      "bind_address": "127.0.0.1",
+      "tunable": { 
+        "max_connections" : "80",
+        "max_allowed_packet": "1M",
+        "thread_cache_size": "4",
+        "key_buffer_size": "6M",
+        "myisam_sort_buffer_size": "6M",
+        "sort_buffer_size": "1M",
+        "read_buffer_size": "128k",
+        "read_rnd_buffer_size": "256k",
+        "tmp_table_size": "15M",
+        "max_heap_table_size": "15M",
+        "query_cache_limit": "2M",
+        "query_cache_min_res_unit": "1024"
+      }
+    }
+  },
+  "override_attributes": {
+    "chef": {
+      "run_mode": "cron"
+    }
+  }
+}
