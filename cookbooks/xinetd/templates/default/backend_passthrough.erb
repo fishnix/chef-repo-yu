@@ -1,0 +1,13 @@
+service <%= node[:xinetd][:backend_passthrough][:service_name] %>
+{ 
+type = UNLISTED 
+flags = REUSE 
+socket_type = stream 
+wait = no 
+user = root 
+per_source = 10
+cps = 10 30
+max_load = 1.00
+redirect = <%= node[:xinetd][:backend_passthrough][:backend_ip] %> <%= node[:xinetd][:backend_passthrough][:backend_port] %>
+port = <%= node[:xinetd][:backend_passthrough][:listen_port] %> 
+}
