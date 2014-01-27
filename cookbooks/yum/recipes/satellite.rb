@@ -17,10 +17,17 @@
 # limitations under the License.
 #
 
-# For now, just update the cert...
-
+# update the cert...
 remote_file "/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT" do
   source node[:yum][:satellite][:certurl]
   mode "0644"
   action :create
+end
+
+# setup the yum.conf
+template "/etc/yum.conf" do
+  source "yum.conf.erb"
+  owner "root"
+  group "root"
+  mode 0444
 end

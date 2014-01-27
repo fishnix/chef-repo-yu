@@ -1,1 +1,6 @@
 default[:yum][:satellite][:certurl] = "http://vm-satprdapp-01.its.yale.edu/pub/RHN-ORG-TRUSTED-SSL-CERT"
+default[:yum][:keepcache]           = "0"
+default[:yum][:exactarch]           = "1"
+default[:yum][:obsoletes]           = "1"
+default[:yum][:gpgcheck]            = "1"
+default[:yum][:plugins]             = "1"
