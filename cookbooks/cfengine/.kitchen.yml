@@ -1,0 +1,22 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: centos-6.4
+
+suites:
+  - name: default
+    run_list:
+      - recipe[yum::default]
+      - recipe[cfengine::localclient]
+    attributes:
+      cfengine:
+        policy_server: 'vm-cfgprdapp-01.its.yale.edu'
+        policy_server_ip: '130.132.50.34'
+        masterfiles: '/var/cfengine/masterfiles'
+        inputs: '/var/cfengine/inputs'
+        cfengine_package: "cfengine-community"
