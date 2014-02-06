@@ -31,3 +31,11 @@ template "/etc/yum.conf" do
   group "root"
   mode 0444
 end
+
+# setup the rhnplugin
+template "/etc/yum/pluginconf.d/rhnplugin.conf" do
+  source "rhnplugin.conf.erb"
+  owner "root"
+  group "root"
+  mode 0444
+end

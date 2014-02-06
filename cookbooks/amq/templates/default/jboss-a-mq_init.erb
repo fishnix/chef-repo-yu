@@ -15,6 +15,9 @@ source /etc/rc.d/init.d/functions
 MAXPERM="256M"
 MAXHEAP="1024m"
 MINHEAP="1024m"
+AMQ_HOME="/usr/local/jboss-a-mq"
+AMQ_USER="jbossa"
+JAVA_HOME="/usr/lib/jvm/java-1.7.0"
 #########################################
 
 # location of sysconfig file
@@ -30,46 +33,44 @@ fi
 [ -r "$SYSCONFIG" ] && source "$SYSCONFIG"
 
 # Set some karaf  variables
-export KARAF_HOME=${KARAF_HOME}
+export AMQ_HOME=${AMQ_HOME}
 
 # Set some Java variables
 export JAVA_HOME=${JAVA_HOME}
 export JAVA_OPTS="-XX:MaxPermSize=${MAXPERM}  -Xms${MINHEAP} -Xmx${MAXHEAP} ${ADDLJVAOPTS}" 
 
 # Set some normal env variables
-export HOME=/home/${KARAF_USER}
+export HOME=/home/${AMQ_USER}
 export PATH=${PATH}:${JAVA_HOME}/bin
 
 start(){
-  FOO=`/usr/bin/pgrep -f -u ${KARAF_USER} ${KARAF_HOME}`
+  FOO=`/usr/bin/pgrep -f -u ${AMQ_USER} ${AMQ_HOME}`
 
   if [ "$FOO" != "" ]
   then
-    /bin/echo "Fuse ESB is already running..."
+    /bin/echo "JBoss A-MQ is already running..."
   else
     /bin/echo "Starting JBoss A-MQ ..."
-    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/start > /dev/null 2>&1
+    /usr/bin/sudo -b -E -u ${AMQ_USER} -- ${AMQ_HOME}/bin/start > /dev/null 2>&1
     sleep 20
   fi
 }
 
 stop(){
-  FOO=`/usr/bin/pgrep -f -u ${KARAF_USER} ${KARAF_HOME}`
+  FOO=`/usr/bin/pgrep -f -u ${AMQ_USER} ${AMQ_HOME}`
   if [ "$FOO" != "" ]
   then
     /bin/echo "Stopping JBoss A-MQ ..."
-    /usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/stop > /dev/null 2>&1
+    /usr/bin/sudo -b -E -u ${AMQ_USER} -- ${AMQ_HOME}/bin/stop > /dev/null 2>&1
     ### wait a bit
     /bin/sleep 10
   else
-    /bin/echo "Fuse ESB is not running..."
+    /bin/echo "JBoss A-MQ is not running..."
   fi
 }
 
 status(){
-
-  #FOO=`/usr/bin/sudo -b -E -u ${KARAF_USER} -- ${KARAF_HOME}/bin/admin list | grep Started`
-  FOO=`/usr/bin/pgrep -f -u ${KARAF_USER} ${KARAF_HOME}`
+  FOO=`/usr/bin/pgrep -f -u ${AMQ_USER} ${AMQ_HOME}`
 
   if [ "$FOO" != "" ]
   then

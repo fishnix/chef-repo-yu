@@ -2,7 +2,7 @@
 # Cookbook Name:: jdk
 # Recipe:: default
 #
-# Copyright 2012, YOUR_COMPANY_NAME
+# Copyright 2013, Yale University
 #
 # All rights reserved - Do Not Redistribute
 #

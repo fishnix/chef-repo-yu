@@ -1,0 +1,11 @@
+[main]
+enabled = 1
+gpgcheck=<%= node[:yum][:gpgcheck] %>
+
+# You can specify options per channel, e.g.:
+#
+#[rhel-i386-server-5]
+#enabled = 1
+#
+#[some-unsigned-custom-channel]
+#gpgcheck = 0
