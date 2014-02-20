@@ -43,6 +43,23 @@ template "/etc/sysconfig/jboss-a-mq" do
    mode "0444"
 end
 
+directory node[:amq][:home] do
+  owner node[:amq][:user]
+  group "root"
+  mode "0755"
+  action :create
+end
+
+home_dirs = %w{ data data/tmp deploy etc }
+home_dirs.each do |d|
+  directory "#{node[:amq][:home]}/#{d}" do
+    owner node[:amq][:user]
+    group "root"
+    mode "0755"
+    action :create
+  end
+end
+
 service 'jboss-a-mq' do
   action [:enable, :start]
 end

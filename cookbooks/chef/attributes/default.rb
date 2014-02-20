@@ -1,0 +1,1 @@
+default[:chef][:run_mode] = "daemon"

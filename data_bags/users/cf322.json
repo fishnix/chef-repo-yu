@@ -1,8 +1,8 @@
 {
-  "id": "fish",
+  "id": "cf322",
 	  "ssh_keys": "ssh-dss AAAAB3NzaC1kc3MAAACBAMK25GJvbbPDl6vGXd7rb8+ucPHOcq87Wx4pa8ws0aXhXUGUHeAWvBqcF4Jrl28PWPvzD+nOOfEpmEGsQXSk+CzCck7ObWMNBVDWb+5lbg4tLnvre+2lFVh+5nqTOlLhqfDl6xHzRy0Ya5gLzRR/uhLHrhrDuCi0aNrbpo0HHq0DAAAAFQCpbQ6Wr2yXQJPOMvV6Y4Wbl22QMwAAAIBB1jTIPiX8tsIc4yjDlSdrLspS9BsoJyDi2lo+uVpR6fSQdYrlu441+M4rlPswb/B75hXomcLxIa3foHST344iU0JeGyHVAaUIU9e3Ij22BJN4ZiPfA2+0rjP9iuH5LKFAyT2IlLVZCfNvYgqy5IbjXwZOmPiakZ6FqWYhFVCb6wAAAIEAqX531T/bBpJ/eS9B+yW+q+ahIC9M+X6wa+ONoIJRcv7JuT0tmJjC3B5KjLpyAttd9Nuf99f3cJEEhag8TRHJpvXITfeiP43itJ4EDalTMImUBB93AqWkTpNIhB+cGbvFuJutRU9xKTetuL5KedCxAsNw64ZcZ/XScTL/cEbvP/Q= ",
 	  "groups": "sysadmin",
-	  "uid": 500,
+	  "uid": 1041,
 	  "shell": "\/bin\/bash",
 	  "comment": "E Camden Fisher"
 }

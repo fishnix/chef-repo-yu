@@ -24,6 +24,17 @@ remote_file "/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT" do
   action :create
 end
 
+bash "register_satellite" do
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+    /usr/sbin/rhnreg_ks --norhnsd --force --activationkey #{node[:yum][:satellite][:reg_key]} --serverUrl #{node[:yum][:satellite][:server_url]}
+  EOH
+  only_if do 
+    File.readlines('/etc/sysconfig/rhn/up2date').grep(/#{node[:yum][:satellite][:server_url]}/).empty?
+  end
+end
+
 # setup the yum.conf
 template "/etc/yum.conf" do
   source "yum.conf.erb"
@@ -39,3 +50,12 @@ template "/etc/yum/pluginconf.d/rhnplugin.conf" do
   group "root"
   mode 0444
 end
+
+# bash "register_with_satellite" do
+#   provider Chef::Provider::Script::Bash 
+#   user "root"
+#   cwd "/tmp"
+#   code echo "connecting to satellite"
+#   not_if { File.readlines('/etc/sysconfig/rhn/up2date').grep(/#{node[:yum][:satellite][:server_url]}/) }
+#   action :run
+# end

@@ -1,0 +1,8 @@
+{
+  "id": "tg333",
+	  "ssh_keys": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9EMM+a/GptL3o+b2PJ3cdbaa/QINMQ5e1NV92WR45lbbYs2oNVhEAOfNAUeMix9tApwq4iO2QPtaS8X9mTmCoZ4MeHgSZagJx5yftWiU0NoNC5+7EXgizNiJbEftTDKfP6c3c1BiCH4S8g9K6qW9NHVsb+eH+v+UTkr0l/zY3JoB1EtMAUNkTaBG3pJaPC87U8wLQm30xFqyRnowX3SGknW8c0Fw5vbyGDJvCEk+96Mykq81dJtst+/Gf/oen2A3VqdzxCreGgCI17ygFOsHehERAhLgXWDteKohZqfo5InSK4RsgcxfXEtYyOo9kuRDPdSy0jOPK3x67Zp+nR9AJ root@localhost.localdomain ",
+	  "groups": "sysadmin",
+	  "uid": 1137,
+	  "shell": "\/bin\/bash",
+	  "comment": "E Camden Fisher"
+}

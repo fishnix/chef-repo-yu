@@ -1,0 +1,1 @@
+default[:logstash][:user] = "logstash"
