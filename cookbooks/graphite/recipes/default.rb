@@ -21,6 +21,11 @@ end
 	end
 end
 
+python_pip "Twisted" do
+  version "12.0.0"
+  action :install
+end
+
 python_pip "whisper"
 python_pip "carbon"
 python_pip "graphite-web"
