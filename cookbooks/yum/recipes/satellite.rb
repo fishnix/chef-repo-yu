@@ -24,6 +24,12 @@ remote_file "/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT" do
   action :create
 end
 
+remote_file "/usr/share/rhn/RHNS-CA-CERT" do
+  source node[:yum][:satellite][:certurl]
+  mode "0644"
+  action :create
+end
+
 bash "register_satellite" do
   user "root"
   cwd "/tmp"
